@@ -1,53 +1,55 @@
 # Cyberquiz · Soccorso digitale
 
-Quiz a squadre per l'aula, in pixel art, sulla lezione di Cybersecurity. Le squadre devono salvare quattro persone, una per ogni truffa: phishing, fuffa guru, sextortion, malware. Il formatore inserisce i voti dal computer collegato al proiettore.
+Quiz a squadre per l'aula, in pixel art, sulla lezione di Cybersecurity. In ogni manche ogni squadra deve salvare una persona da una truffa. Il formatore inserisce i voti dal computer collegato al proiettore. Tutte le schermate sono pensate per stare in un unico schermo 16:9.
 
 ## Come si gioca
 
-1. **Preparazione.** Il formatore sceglie il numero di squadre (da 1 a 4), il nome e il numero di componenti di ogni squadra.
-2. **Round.** Ci sono 4 round, uno per truffa. All'inizio di ogni round ogni squadra vede la situazione della persona da salvare, senza nome e con il ritratto oscurato.
-3. **Domande.** Ogni round ha 4 domande a scelta multipla. Per ogni squadra il formatore inserisce quante persone hanno votato A, B, C e D, con i tasti − e + oppure scrivendo il numero. Chi non vota conta come risposta sbagliata.
-4. **Esito del round.** Ogni squadra scopre solo se la sua vittima è stata salvata, e come. Non vede punti né percentuali. Il formatore può mostrare le risposte giuste con le spiegazioni.
-5. **Titoli di coda.** A fine partita scorrono i titoli: per ogni squadra si scopre chi erano le persone, quanto era alta la posta in gioco e quanti punti valeva ciascun salvataggio.
-6. **Classifica.** Squadra, persone salvate, media delle risposte esatte, punteggio finale.
+1. **Menu.** Dal menu si inizia una nuova partita, oppure si riprende quella in sospeso, se ce n'è una non conclusa.
+2. **Preparazione.** Il formatore sceglie il numero di squadre (da 1 a 4), il nome e il numero di componenti di ogni squadra.
+3. **Regole.** Una schermata riassume come si risponde, le fasce di salvataggio e il punteggio.
+4. **Manche.** Le manche sono 4, nell'ordine: Fuffa guru, Phishing/Vishing/Smishing, Sextortion, Malware. Ogni manche si apre con la presentazione della truffa e della persona che ogni squadra deve salvare. A ogni partita le persone vengono assegnate alle squadre a caso.
+5. **Domande.** Per ogni squadra il formatore inserisce quante persone hanno votato A, B, C e D, con i tasti − e + oppure scrivendo il numero. Si può andare avanti anche se mancano dei voti: le risposte non date valgono come sbagliate.
+6. **Risposta.** Dopo **Conferma risposte** la risposta giusta si illumina di verde, e per ogni squadra compaiono le risposte esatte e la percentuale. Qui il formatore spiega la domanda. Con **Correggi i voti** si torna a modificarli.
+7. **Fine manche.** Per ogni squadra compaiono l'esito del salvataggio, i punti con il calcolo e la classifica parziale.
+8. **Classifica finale.** Squadra, persone salvate, media delle risposte esatte, punteggio.
 
 ## Punteggio
 
-Per ogni round: percentuale di risposte esatte della squadra (arrotondata per eccesso) × moltiplicatore della posta in gioco × moltiplicatore del salvataggio.
+Punti della manche = percentuale di risposte esatte della squadra (arrotondata per eccesso) × moltiplicatore della manche × moltiplicatore del salvataggio.
+
+| Manche | Moltiplicatore |
+|---|---|
+| 1 · Fuffa guru | ×1,5 |
+| 2 · Phishing, Vishing, Smishing | ×1 |
+| 3 · Sextortion | ×1,5 |
+| 4 · Malware | ×2 |
 
 | Salvataggio | Risposte esatte | Moltiplicatore |
 |---|---|---|
 | Perfetto | 90–100% | ×2 |
-| Efficace | 75–89% | ×1,5 |
-| Con perdite | 60–74% | ×1 |
-| Vittima truffata | sotto il 60% | nessun punto |
+| Efficace | 80–89,9% | ×1,6 |
+| Mid | 70–79,9% | ×1,3 |
+| Per un pelo | 60–69,9% | ×1 |
+| Fallito | sotto il 60% | ×0 |
 
-| Posta in gioco | Moltiplicatore |
-|---|---|
-| Enorme | ×2 |
-| Alta | ×1,6 |
-| Media | ×1,3 |
-| Bassa | ×1 |
-
-Esempio: 83% su una vittima con posta media → 83 × 1,3 × 1,5 = 162 punti. Il massimo teorico è 1.180 punti.
-
-All'inizio di ogni partita il gioco assegna a caso le vittime alle squadre, in modo equo: ogni squadra incontra una vittima per ogni livello di posta in gioco, e nello stesso round due squadre non hanno mai lo stesso livello.
+La fascia si decide sulla percentuale esatta, senza arrotondare. Esempio: 83% nella manche 1 → 83 × 1,5 × 1,6 = 199 punti. Il massimo è 1.200 punti.
 
 ## Salvataggio della partita
 
-La partita si salva da sola a ogni voto, nel browser del computer che la proietta. Il tasto **Pausa** in alto a destra la sospende. Riaprendo la pagina compare la scelta tra **Riprendi** e **Nuova partita**: la partita salvata resta disponibile finché non se ne inizia una nuova, che la sovrascrive.
+La partita si salva da sola a ogni voto, nel browser del computer che la proietta. Il tasto **Pausa** in alto a destra riporta al menu, da cui si può riprendere. La partita salvata resta disponibile finché non se ne inizia una nuova, che la sovrascrive. Una partita conclusa non compare più tra quelle da riprendere.
 
 Il salvataggio resta in quel browser: aprendo il gioco su un altro computer non si ritrova.
 
 ## Modificare i contenuti
 
-Truffe, vittime, domande e moltiplicatori sono tutti in `content.js`. Per ogni round:
+Manche, persone da salvare, domande e moltiplicatori sono tutti in `content.js`. Per ogni manche:
 
-- `vittime`: quattro persone, una per ogni livello (`enorme`, `alto`, `medio`, `basso`). `situazione` si legge durante il round, `storia` nei titoli di coda.
-- `domande`: `q` è il testo, `options` le quattro risposte (A, B, C, D), `correct` la posizione della risposta giusta (0 = A, 1 = B, 2 = C, 3 = D), `spiegazione` compare nel riepilogo.
+- `mult`: moltiplicatore della manche.
+- `vittime`: quattro persone, con `nome` e `situazione`. Il ritratto in pixel si genera dal nome.
+- `domande`: `q` è il testo, `options` le quattro risposte (A, B, C, D), `correct` la posizione della risposta giusta (0 = A, 1 = B, 2 = C, 3 = D). `nota` è un appunto per il formatore e non compare a schermo.
 - `esiti`: il testo che si legge per ogni tipo di salvataggio.
 
-Il ritratto in pixel di ogni vittima si genera dal nome e dall'età.
+L'ordine delle manche è quello in cui compaiono nel file.
 
 ## Pubblicarlo online
 

@@ -8,11 +8,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=Press+Start+2P&display=swap">
 <style>
-/* Arcade screen in the style of Boss AI: dark pixel city, HUD on top, one big panel. */
+/* Arcade screen in the style of Boss AI. Sized on the viewport height so a
+   whole screen (question + options + team counters) fits a 16:9 projector. */
 :root {
   color-scheme: dark;
   --night: #0d0816;
-  --glass: rgba(20, 13, 33, 0.92);
+  --glass: rgba(20, 13, 33, 0.93);
   --slot: #1d1530;
   --edge: #3a2f55;
   --ink: #ece8f7;
@@ -21,180 +22,190 @@
   --volt: #3ef0ff;
   --gold: #ffd23f;
   --lime: #b6e13a;
+  --green: #2fd26b;
   --orange: #ff9a2e;
   --black: #000000;
   --f-display: "Press Start 2P", ui-monospace, "Courier New", monospace;
   --f-body: "Pixelify Sans", ui-monospace, "Courier New", monospace;
+  --u: min(1vh, 0.5625vw);   /* 1% of the height of a 16:9 frame that fits the window */
 }
 * { box-sizing: border-box; }
 html, body { height: 100%; }
-body { margin: 0; background: var(--night); color: var(--ink); font-family: var(--f-body); font-size: 18px; overflow: hidden; }
+body { margin: 0; background: var(--night); color: var(--ink); font-family: var(--f-body); font-size: calc(var(--u) * 2.2); overflow: hidden; }
 #bg { position: fixed; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; z-index: 0; }
 body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.14) 0 1px, transparent 1px 3px); }
 .app {
   position: relative; z-index: 1; height: 100%;
-  display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 16px;
-  padding-block: 16px;
-  padding-left: max(clamp(16px, 2.4vw, 40px), env(safe-area-inset-left, 0px));
-  padding-right: max(clamp(16px, 2.4vw, 40px), env(safe-area-inset-right, 0px));
+  display: grid; grid-template-rows: auto minmax(0, 1fr); gap: calc(var(--u) * 1.6);
+  padding: calc(var(--u) * 1.8) max(calc(var(--u) * 2.6), 16px);
 }
 
 /* ---------- HUD ---------- */
 .hud {
-  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 20px;
-  background: var(--glass); border: 4px solid var(--edge); box-shadow: 6px 6px 0 var(--black); padding: 12px 18px;
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: calc(var(--u) * 2.4);
+  background: var(--glass); border: 4px solid var(--edge); box-shadow: 6px 6px 0 var(--black);
+  padding: calc(var(--u) * 1.1) calc(var(--u) * 2);
 }
-.game-name { font-family: var(--f-display); font-size: clamp(13px, 1.25vw, 20px); color: var(--blood); text-shadow: 3px 3px 0 var(--black); }
-.game-sub { font-size: 15px; color: var(--muted); margin-top: 6px; }
-.track { display: flex; justify-content: center; gap: clamp(10px, 1.6vw, 26px); flex-wrap: wrap; }
-.trk { display: grid; gap: 6px; justify-items: center; }
-.trk-name { font-family: var(--f-display); font-size: 9px; color: var(--muted); letter-spacing: 0.05em; }
-.trk.now .trk-name { color: var(--gold); }
+.game-name { font-family: var(--f-display); font-size: calc(var(--u) * 1.9); color: var(--blood); text-shadow: 3px 3px 0 var(--black); }
+.game-sub { font-size: calc(var(--u) * 1.6); color: var(--muted); margin-top: calc(var(--u) * 0.6); }
+.track { display: flex; justify-content: center; gap: calc(var(--u) * 2.4); flex-wrap: wrap; }
+.trk { display: grid; gap: calc(var(--u) * 0.6); justify-items: center; }
+.trk-name { font-family: var(--f-display); font-size: calc(var(--u) * 0.95); color: var(--muted); letter-spacing: 0.05em; white-space: nowrap; }
+.trk-name b { color: var(--gold); font-weight: 400; }
+.trk.now .trk-name { color: var(--ink); }
 .trk-pips { display: flex; gap: 3px; }
-.trk-pip { width: 14px; height: 14px; background: var(--slot); border: 2px solid var(--edge); }
+.trk-pip { width: calc(var(--u) * 1.4); height: calc(var(--u) * 1.4); background: var(--slot); border: 2px solid var(--edge); }
 .trk-pip.done { background: var(--muted); border-color: var(--black); }
 .trk-pip.now { background: var(--gold); border-color: var(--black); }
 .hud-btn {
-  font-family: var(--f-display); font-size: 10px; letter-spacing: 0.06em; padding: 10px 12px; cursor: pointer;
+  font-family: var(--f-display); font-size: calc(var(--u) * 1.05); letter-spacing: 0.06em; padding: calc(var(--u) * 1.1) calc(var(--u) * 1.3); cursor: pointer;
   background: var(--slot); color: var(--ink); border: 3px solid var(--edge); box-shadow: 3px 3px 0 var(--black);
 }
 .hud-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--black); }
 .hud-btn[hidden] { display: none; }
+.app.bare .hud { display: none; }
+.app.bare { grid-template-rows: minmax(0, 1fr); }
 
 /* ---------- Panel ---------- */
 .panel {
   background: var(--glass); border: 4px solid var(--edge); box-shadow: 6px 6px 0 var(--black);
-  padding: clamp(18px, 2.2vw, 34px); display: flex; flex-direction: column; gap: 20px; min-height: 0; overflow: auto;
+  padding: calc(var(--u) * 2.6) calc(var(--u) * 3.2); display: flex; flex-direction: column; gap: calc(var(--u) * 1.9); min-height: 0; overflow: auto;
 }
-.eyebrow { font-family: var(--f-display); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin: 0; line-height: 1.6; }
-.title { font-family: var(--f-display); font-size: clamp(26px, 3.2vw, 52px); line-height: 1.15; margin: 0; color: var(--blood); text-shadow: 5px 5px 0 var(--black); text-wrap: balance; }
+.eyebrow { font-family: var(--f-display); font-size: calc(var(--u) * 1.15); color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin: 0; line-height: 1.6; }
+.title { font-family: var(--f-display); font-size: calc(var(--u) * 4.6); line-height: 1.15; margin: 0; color: var(--blood); text-shadow: 5px 5px 0 var(--black); text-wrap: balance; }
 .title.cool { color: var(--volt); }
-.lede { font-size: clamp(19px, 1.5vw, 24px); line-height: 1.45; margin: 0; max-width: 46em; }
-.note { margin: 0; color: var(--muted); font-size: 17px; line-height: 1.4; }
+.lede { font-size: calc(var(--u) * 2.5); line-height: 1.4; margin: 0; max-width: 52em; }
+.note { margin: 0; color: var(--muted); font-size: calc(var(--u) * 1.9); line-height: 1.4; }
 .note strong { color: var(--gold); font-weight: 600; }
-.qtext { font-size: clamp(24px, 2.2vw, 36px); line-height: 1.25; font-weight: 600; margin: 0; text-wrap: balance; }
+.qtext { font-size: calc(var(--u) * 3.3); line-height: 1.22; font-weight: 600; margin: 0; text-wrap: balance; }
 
 .btn {
-  font-family: var(--f-display); font-size: 13px; letter-spacing: 0.06em; padding: 15px 20px; cursor: pointer;
+  font-family: var(--f-display); font-size: calc(var(--u) * 1.4); letter-spacing: 0.06em; padding: calc(var(--u) * 1.5) calc(var(--u) * 2.1); cursor: pointer;
   background: var(--blood); color: var(--ink); border: 3px solid var(--black); box-shadow: 5px 5px 0 var(--black);
 }
 .btn:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0 var(--black); }
 .btn.ghost { background: var(--slot); border-color: var(--edge); }
-.btn.cool { background: #0f6e85; }
+.btn.go { background: #138a45; }
+.btn.big { font-size: calc(var(--u) * 2); padding: calc(var(--u) * 2.2) calc(var(--u) * 3.2); min-width: calc(var(--u) * 42); }
 .btn:disabled { background: var(--slot); color: var(--muted); cursor: not-allowed; transform: none; box-shadow: 5px 5px 0 var(--black); }
-.actions { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-top: auto; padding-top: 4px; }
-.actions .right { display: flex; gap: 14px; flex-wrap: wrap; margin-left: auto; }
+.actions { display: flex; align-items: center; justify-content: space-between; gap: calc(var(--u) * 1.4); flex-wrap: wrap; margin-top: auto; }
+.actions .right { display: flex; gap: calc(var(--u) * 1.4); flex-wrap: wrap; margin-left: auto; align-items: center; }
 
 .step {
-  width: 40px; height: 40px; font-family: var(--f-display); font-size: 16px; line-height: 1;
+  width: calc(var(--u) * 4.2); height: calc(var(--u) * 4.2); font-family: var(--f-display); font-size: calc(var(--u) * 1.6); line-height: 1; padding: 0;
   background: var(--night); color: var(--ink); border: 3px solid var(--edge); cursor: pointer; box-shadow: 0 3px 0 var(--black); flex: none;
 }
 .step:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--black); }
 .step:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
 .numin {
-  width: 3.4ch; height: 40px; text-align: center; font-family: var(--f-display); font-size: 17px; color: var(--gold);
+  width: calc(var(--u) * 6); height: calc(var(--u) * 4.2); text-align: center; font-family: var(--f-display); font-size: calc(var(--u) * 1.7); color: var(--gold);
   background: var(--black); border: 3px solid var(--edge); padding: 0; -moz-appearance: textfield; appearance: textfield;
 }
 .numin::-webkit-outer-spin-button, .numin::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .numin:focus { outline: 3px solid var(--volt); outline-offset: 0; }
-.counter { display: inline-flex; align-items: center; gap: 5px; }
+.counter { display: inline-flex; align-items: center; gap: calc(var(--u) * 0.5); }
 button:focus-visible, input:focus-visible { outline: 3px solid var(--volt); outline-offset: 3px; }
 
+/* ---------- Menu ---------- */
+.menu { display: grid; place-items: center; align-content: center; gap: calc(var(--u) * 3.2); text-align: center; flex: 1; }
+.menu .logo { font-family: var(--f-display); font-size: calc(var(--u) * 7.2); color: var(--blood); text-shadow: 7px 7px 0 var(--black); margin: 0; line-height: 1.15; }
+.menu .tag { font-size: calc(var(--u) * 2.6); color: var(--muted); margin: 0; }
+.menu .faces { display: flex; gap: calc(var(--u) * 1.6); justify-content: center; }
+.menu .faces .avatar { width: calc(var(--u) * 11); height: calc(var(--u) * 11); }
+.menu .stack { display: grid; gap: calc(var(--u) * 1.8); justify-items: center; }
+.menu .saved { font-size: calc(var(--u) * 1.9); color: var(--muted); margin: 0; }
+
 /* ---------- Setup ---------- */
-.setup-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
-.field { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; background: var(--slot); border: 3px solid var(--edge); padding: 14px 16px; }
-.field-label { font-size: 21px; font-weight: 600; }
-.team-set { background: var(--slot); border: 3px solid var(--edge); border-top: 8px solid var(--tc); padding: 14px 16px; display: grid; gap: 12px; }
+.setup-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(calc(var(--u) * 30), 1fr)); gap: calc(var(--u) * 1.4); }
+.field { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; background: var(--slot); border: 3px solid var(--edge); padding: calc(var(--u) * 1.4) calc(var(--u) * 1.6); }
+.field-label { font-size: calc(var(--u) * 2.4); font-weight: 600; }
+.team-set { background: var(--slot); border: 3px solid var(--edge); border-top: 8px solid var(--tc); padding: calc(var(--u) * 1.4) calc(var(--u) * 1.6); display: grid; gap: calc(var(--u) * 1.2); }
 .team-set input[type=text] {
-  width: 100%; font-family: var(--f-body); font-size: 21px; font-weight: 600; color: var(--ink);
-  background: var(--black); border: 3px solid var(--edge); padding: 8px 10px;
+  width: 100%; font-family: var(--f-body); font-size: calc(var(--u) * 2.4); font-weight: 600; color: var(--ink);
+  background: var(--black); border: 3px solid var(--edge); padding: calc(var(--u) * 0.8) calc(var(--u) * 1);
 }
 .team-set .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.team-set .lbl { color: var(--muted); font-size: 17px; }
+.team-set .lbl { color: var(--muted); font-size: calc(var(--u) * 2); }
+.warnline { color: var(--orange); font-size: calc(var(--u) * 1.9); margin: 0; }
 
 /* ---------- Rules ---------- */
-.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
-.rule { background: var(--slot); border: 3px solid var(--edge); padding: 16px; display: grid; gap: 10px; align-content: start; }
-.rule h3 { font-family: var(--f-display); font-size: 12px; color: var(--gold); margin: 0; line-height: 1.5; }
-.rule p { margin: 0; font-size: 19px; line-height: 1.4; }
-.bands { display: grid; gap: 6px; }
-.band-row { display: flex; justify-content: space-between; gap: 10px; font-size: 18px; }
-.band-row b { font-family: var(--f-display); font-size: 11px; color: var(--bc); }
+.rules { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(var(--u) * 1.6); }
+.rule { background: var(--slot); border: 3px solid var(--edge); padding: calc(var(--u) * 1.8); display: grid; gap: calc(var(--u) * 1.1); align-content: start; }
+.rule h3 { font-family: var(--f-display); font-size: calc(var(--u) * 1.3); color: var(--gold); margin: 0; line-height: 1.5; }
+.rule p { margin: 0; font-size: calc(var(--u) * 2.15); line-height: 1.38; }
+.bands { display: grid; gap: calc(var(--u) * 0.7); }
+.band-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: calc(var(--u) * 2); }
+.band-row b { font-family: var(--f-display); font-size: calc(var(--u) * 1.05); color: var(--bc); line-height: 1.5; }
+.band-row span { white-space: nowrap; }
 
 /* ---------- Victim cards ---------- */
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+.cards { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: calc(var(--u) * 1.6); }
 .vcard {
   background: var(--slot); border: 3px solid var(--edge); border-top: 8px solid var(--tc);
-  padding: 16px; display: grid; gap: 12px; align-content: start; position: relative;
+  padding: calc(var(--u) * 1.7); display: grid; gap: calc(var(--u) * 1.2); align-content: start; position: relative;
 }
-.vcard .team { font-family: var(--f-display); font-size: 12px; color: var(--ti); line-height: 1.5; }
-.vcard .who { display: flex; align-items: center; gap: 14px; }
-.vcard .tag { font-family: var(--f-display); font-size: 10px; color: var(--muted); line-height: 1.6; }
-.vcard .sit { font-size: 19px; line-height: 1.4; margin: 0; }
-.avatar { width: 96px; height: 96px; image-rendering: pixelated; border: 3px solid var(--black); background: #2b2342; flex: none; }
-.avatar.big { width: 132px; height: 132px; }
-.verdict { font-family: var(--f-display); font-size: clamp(13px, 1.1vw, 17px); line-height: 1.5; color: var(--bc); text-shadow: 3px 3px 0 var(--black); }
-.vcard.res { animation: dropin 0.6s steps(6) both; }
-.vcard.truffata { border-color: var(--blood); }
+.vcard .team { font-family: var(--f-display); font-size: calc(var(--u) * 1.25); color: var(--ti); line-height: 1.5; }
+.vcard .who { display: flex; align-items: center; gap: calc(var(--u) * 1.4); }
+.vcard .vname { font-family: var(--f-display); font-size: calc(var(--u) * 1.6); line-height: 1.5; color: var(--ink); }
+.vcard .sit { font-size: calc(var(--u) * 2.15); line-height: 1.38; margin: 0; }
+.avatar { width: calc(var(--u) * 12); height: calc(var(--u) * 12); image-rendering: pixelated; border: 3px solid var(--black); flex: none; }
+.verdict { font-family: var(--f-display); font-size: calc(var(--u) * 1.5); line-height: 1.5; color: var(--bc); text-shadow: 3px 3px 0 var(--black); }
+.calc { font-family: var(--f-display); font-size: calc(var(--u) * 1.15); color: var(--muted); line-height: 1.7; }
+.calc b { color: var(--gold); font-weight: 400; font-size: calc(var(--u) * 2); display: block; }
+.vcard.anim { animation: dropin 0.6s steps(6) both; }
+.vcard.fallito { border-color: var(--blood); border-top-color: var(--tc); }
 .vcard.perfetto { box-shadow: 0 0 0 3px var(--lime); }
 @keyframes dropin { from { transform: translateY(-24px); opacity: 0; } to { transform: none; opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .vcard.res { animation: none; } }
 
 /* ---------- Question grid ---------- */
-.vote-grid { display: grid; gap: 10px; }
-.vrow { display: grid; align-items: center; gap: 12px; background: var(--slot); border: 3px solid var(--edge); padding: 10px 12px; }
-.vrow.head { background: none; border: none; padding: 0 12px; }
-.letter { font-family: var(--f-display); font-size: 15px; width: 40px; height: 40px; display: grid; place-items: center; background: var(--edge); }
-.otext { font-size: clamp(18px, 1.5vw, 23px); line-height: 1.3; min-width: 0; }
+.vote-grid { display: grid; gap: calc(var(--u) * 0.9); }
+.vrow { display: grid; align-items: center; gap: calc(var(--u) * 1.2); background: var(--slot); border: 3px solid var(--edge); padding: calc(var(--u) * 0.8) calc(var(--u) * 1.1); }
+.vrow.head { background: none; border: none; padding: 0 calc(var(--u) * 1.1); }
+.letter { font-family: var(--f-display); font-size: calc(var(--u) * 1.6); width: calc(var(--u) * 4.2); height: calc(var(--u) * 4.2); display: grid; place-items: center; background: var(--edge); }
+.otext { font-size: calc(var(--u) * 2.35); line-height: 1.25; min-width: 0; }
 .tcol { display: flex; justify-content: center; }
-.thead { font-family: var(--f-display); font-size: 10px; color: var(--ti); text-align: center; line-height: 1.5; border-bottom: 5px solid var(--tc); padding-bottom: 6px; overflow-wrap: anywhere; }
-.status-row .tcol { font-family: var(--f-display); font-size: 10px; line-height: 1.6; text-align: center; }
+.thead { font-family: var(--f-display); font-size: calc(var(--u) * 1.05); color: var(--ti); text-align: center; line-height: 1.5; border-bottom: 5px solid var(--tc); padding-bottom: calc(var(--u) * 0.6); overflow-wrap: anywhere; }
+.status-row .tcol { font-family: var(--f-display); font-size: calc(var(--u) * 1.05); line-height: 1.6; text-align: center; }
 .ok { color: var(--lime); }
 .warn { color: var(--orange); }
-
-/* ---------- Recap ---------- */
-.recap { display: grid; gap: 10px; }
-.recap-item { background: var(--slot); border: 3px solid var(--edge); padding: 12px 14px; display: grid; gap: 6px; }
-.recap-item .rq { font-size: 19px; font-weight: 600; }
-.recap-item .ra { font-size: 19px; color: var(--lime); }
-.recap-item .rs { font-size: 17px; color: var(--muted); line-height: 1.4; }
+/* reveal */
+.vrow.right { background: #0f3b22; border-color: var(--green); box-shadow: 0 0 0 3px var(--green), 0 0 calc(var(--u) * 3) rgba(47, 210, 107, 0.55); animation: glow 1.2s steps(6) 2; }
+.vrow.right .letter { background: var(--green); color: var(--black); }
+.vrow.wrong { opacity: 0.45; }
+@keyframes glow { 50% { box-shadow: 0 0 0 5px var(--green), 0 0 calc(var(--u) * 5) rgba(47, 210, 107, 0.85); } }
+.vcount { font-family: var(--f-display); font-size: calc(var(--u) * 1.9); color: var(--ink); min-width: calc(var(--u) * 6); text-align: center; }
+.vrow.right .vcount { color: var(--gold); }
+.res-row .tcol { display: grid; justify-items: center; gap: calc(var(--u) * 0.5); }
+.res-pct { font-family: var(--f-display); font-size: calc(var(--u) * 2.6); color: var(--gold); text-shadow: 3px 3px 0 var(--black); }
+.res-n { font-family: var(--f-display); font-size: calc(var(--u) * 1.05); color: var(--muted); }
 
 /* ---------- Leaderboard ---------- */
-.board { width: 100%; border-collapse: separate; border-spacing: 0 8px; font-size: clamp(18px, 1.5vw, 24px); }
-.board th { font-family: var(--f-display); font-size: 10px; color: var(--muted); text-align: left; padding: 0 14px; font-weight: 400; letter-spacing: 0.05em; }
-.board td { background: var(--slot); padding: 14px; border-top: 3px solid var(--edge); border-bottom: 3px solid var(--edge); }
-.board td:first-child { border-left: 8px solid var(--tc); font-family: var(--f-display); font-size: 16px; color: var(--gold); }
-.board td:last-child { border-right: 3px solid var(--edge); font-family: var(--f-display); color: var(--gold); font-size: clamp(14px, 1.3vw, 20px); }
+.board { width: 100%; border-collapse: separate; border-spacing: 0 calc(var(--u) * 0.9); font-size: calc(var(--u) * 2.5); }
+.board th { font-family: var(--f-display); font-size: calc(var(--u) * 1.05); color: var(--muted); text-align: left; padding: 0 calc(var(--u) * 1.5); font-weight: 400; letter-spacing: 0.05em; }
+.board td { background: var(--slot); padding: calc(var(--u) * 1.5); border-top: 3px solid var(--edge); border-bottom: 3px solid var(--edge); }
+.board td:first-child { border-left: 8px solid var(--tc); font-family: var(--f-display); font-size: calc(var(--u) * 1.8); color: var(--gold); }
+.board td:last-child { border-right: 3px solid var(--edge); font-family: var(--f-display); color: var(--gold); font-size: calc(var(--u) * 2.2); }
 .board .tn { color: var(--ti); font-weight: 700; }
 .board .num, .board th.num { text-align: right; }
 .board tr.first td { border-color: var(--gold); }
+.board.small { font-size: calc(var(--u) * 2); border-spacing: 0 calc(var(--u) * 0.6); }
+.board.small td { padding: calc(var(--u) * 0.9) calc(var(--u) * 1.4); }
+.board.small td:last-child { font-size: calc(var(--u) * 1.7); }
+.board.small td:first-child { font-size: calc(var(--u) * 1.4); }
 
-/* ---------- Credits ---------- */
-.credits { position: fixed; inset: 0; z-index: 30; background: #050308; overflow: hidden; }
-.credits[hidden] { display: none; }
-.roll { position: absolute; left: 50%; top: 0; width: min(760px, calc(100% - 32px)); transform: translateX(-50%); text-align: center; padding: 100vh 0; }
-.cr-h { font-family: var(--f-display); font-size: clamp(22px, 2.6vw, 40px); color: var(--blood); text-shadow: 4px 4px 0 var(--black); margin: 0 0 18px; line-height: 1.3; }
-.cr-sub { font-size: 22px; color: var(--muted); margin: 0 0 22vh; }
-.cr-team { font-family: var(--f-display); font-size: clamp(18px, 2vw, 30px); color: var(--ti); margin: 0 0 8px; line-height: 1.4; }
-.cr-team-line { width: 120px; height: 6px; background: var(--tc); margin: 0 auto 12vh; }
-.cr-v { display: grid; justify-items: center; gap: 12px; margin-bottom: 12vh; }
-.cr-v .avatar { width: 150px; height: 150px; }
-.cr-name { font-family: var(--f-display); font-size: clamp(16px, 1.6vw, 24px); color: var(--ink); line-height: 1.4; }
-.cr-scam { font-family: var(--f-display); font-size: 10px; color: var(--muted); letter-spacing: 0.08em; }
-.cr-story { font-size: clamp(20px, 1.7vw, 26px); line-height: 1.45; margin: 0; max-width: 30em; }
-.cr-meta { display: grid; gap: 6px; font-size: 20px; }
-.cr-meta b { font-family: var(--f-display); font-size: 12px; color: var(--bc, var(--gold)); }
-.cr-calc { font-family: var(--f-display); font-size: 13px; color: var(--gold); line-height: 1.6; }
-.cr-total { font-family: var(--f-display); font-size: clamp(16px, 1.6vw, 24px); color: var(--gold); margin: 0 0 24vh; line-height: 1.6; }
-.cr-end { font-family: var(--f-display); font-size: clamp(18px, 2vw, 28px); color: var(--volt); }
-.cr-ctrl { position: fixed; right: 18px; bottom: 18px; z-index: 31; display: flex; gap: 10px; }
-.cr-ctrl .btn { font-size: 11px; padding: 12px 14px; }
-
-@media (max-width: 900px) {
+/* result screen: cards + standings must share one 16:9 screen */
+.panel.result { gap: calc(var(--u) * 1.4); }
+.panel.result .title { font-size: calc(var(--u) * 3.4); }
+.panel.result .avatar { width: calc(var(--u) * 8); height: calc(var(--u) * 8); }
+.panel.result .vcard { gap: calc(var(--u) * 0.9); padding: calc(var(--u) * 1.4); }
+.panel.result .sit { font-size: calc(var(--u) * 1.95); }
+.panel.result .board.small { border-spacing: 0 calc(var(--u) * 0.45); }
+.panel.result .board.small td { padding: calc(var(--u) * 0.55) calc(var(--u) * 1.4); }
+@media (prefers-reduced-motion: reduce) { .vcard.anim, .vrow.right { animation: none; } }
+@media (max-aspect-ratio: 4/3) {
   body { overflow: auto; }
   .app { height: auto; min-height: 100%; }
-  .hud { grid-template-columns: 1fr auto; }
-  .track { grid-column: 1 / -1; grid-row: 2; }
+  .rules, .cards { grid-template-columns: minmax(0, 1fr); }
 }
 </style>
 </head>
@@ -213,15 +224,6 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--volt); outl
   <main class="panel" id="panel" aria-live="polite"></main>
 </div>
 
-<div class="credits" id="credits" hidden>
-  <div class="roll" id="roll"></div>
-  <div class="cr-ctrl">
-    <button class="btn ghost" id="crPlay">Pausa</button>
-    <button class="btn ghost" id="crFast">Veloce</button>
-    <button class="btn" id="crSkip">Classifica</button>
-  </div>
-</div>
-
 <script src="content.js"></script>
 <script>
 (() => {
@@ -230,25 +232,22 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--volt); outl
 /* ===================== CONTENT ===================== */
 const C = window.CYBERQUIZ || {};
 const ROUNDS = C.round || [];
-const VALORI = C.valori || {};
-const VKEYS = ["enorme", "alto", "medio", "basso"];
 const FASCE = (C.fasce || []).slice().sort((a, b) => b.min - a.min);
 const LETTERS = ["A", "B", "C", "D"];
-const SAVE_KEY = "cyberquiz_save_v1";
+const SAVE_KEY = "cyberquiz_save_v2";
 const TEAM_STYLE = [
   { name: "Squadra Viola",   col: "#9c2aa0", ink: "#dd86e3" },
   { name: "Squadra Azzurra", col: "#00b0ca", ink: "#5fdcee" },
   { name: "Squadra Gialla",  col: "#fecb00", ink: "#fecb00" },
   { name: "Squadra Lime",    col: "#a8b400", ink: "#cfdc3a" }
 ];
-const BAND_COL = { perfetto: "var(--lime)", efficace: "var(--gold)", perdite: "var(--orange)", truffata: "var(--blood)" };
+const BAND_COL = { perfetto: "var(--lime)", efficace: "var(--gold)", mid: "var(--orange)", pelo: "#ff6a3d", fallito: "var(--blood)" };
 
 function contentErrors() {
   const e = [];
   if (ROUNDS.length < 1) e.push("Nessun round trovato in content.js.");
   ROUNDS.forEach((r, i) => {
-    const vs = (r.vittime || []).map(v => v.valore).sort().join(",");
-    if (vs !== VKEYS.slice().sort().join(",")) e.push(`Round ${i + 1}: servono 4 vittime, una per valore (enorme, alto, medio, basso).`);
+    if ((r.vittime || []).length < 4) e.push(`Round ${i + 1}: servono 4 vittime, una per squadra.`);
     if (!(r.domande || []).length) e.push(`Round ${i + 1}: nessuna domanda.`);
     (r.domande || []).forEach((d, j) => {
       if ((d.options || []).length !== 4 || !(d.correct >= 0 && d.correct <= 3)) e.push(`Round ${i + 1}, domanda ${j + 1}: servono 4 risposte e una risposta giusta da 0 a 3.`);
@@ -259,13 +258,12 @@ function contentErrors() {
 
 /* ===================== STATE & SAVE ===================== */
 let S = freshSetup();
-let view = "setup";          // setup | resume | game
-let confirmNew = false;
-let animResult = false;      // drop-in animation only when the round has just ended
+let view = "menu";           // menu | setup | game
+let animCards = false;       // drop-in animation only when a round has just ended
 
 function freshSetup(prev) {
   const teams = TEAM_STYLE.map((t, i) => ({ name: (prev && prev[i] && prev[i].name) || t.name, members: (prev && prev[i] && prev[i].members) || 25 }));
-  return { phase: "setup", nTeams: prev ? prev.length : 4, teams, square: [], answers: [], ri: 0, qi: 0, recap: false, savedAt: 0 };
+  return { phase: "setup", nTeams: prev ? prev.length : 4, teams, assign: [], answers: [], ri: 0, qi: 0, savedAt: 0 };
 }
 function save() {
   if (S.phase === "setup") return;
@@ -282,43 +280,37 @@ function loadSave() {
     return s;
   } catch (e) { return null; }
 }
-
-/* ===================== RANDOM FAIR COMBINATIONS ===================== */
-function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-// A random 4x4 Latin square: rows are teams, columns are rounds, symbols are stake values.
-// Each team meets every value once, and in each round every team has a different value.
-function latinSquare() {
-  const p = shuffle([0, 1, 2, 3]), q = shuffle([0, 1, 2, 3]), s = shuffle(VKEYS.slice());
-  const klein = Math.random() < 0.5;
-  return p.map(i => q.map(j => s[klein ? (i ^ j) : (i + j) % 4]));
-}
+const unfinished = () => { const s = loadSave(); return s && s.phase !== "final" ? s : null; };
 
 /* ===================== SCORING ===================== */
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 const teams = () => S.teams.slice(0, S.nTeams);
-const victim = (t, r) => ROUNDS[r].vittime.find(v => v.valore === S.square[t][r]);
-const fmt = n => Number(n).toLocaleString("it-IT", { maximumFractionDigits: 2 });
-function correctVotes(t, r) {
-  return ROUNDS[r].domande.reduce((sum, d, q) => sum + (S.answers[r][q][t][d.correct] || 0), 0);
-}
+const victim = (t, r) => ROUNDS[r].vittime[S.assign[r][t]];
+const fmt = (n, d = 2) => Number(n).toLocaleString("it-IT", { maximumFractionDigits: d });
+const pctTxt = p => fmt(Math.floor(p * 10 + 1e-9) / 10, 1) + "%";
+const answersOf = (t, r, q) => S.answers[r][q][t];
+const qCorrect = (t, r, q) => answersOf(t, r, q)[ROUNDS[r].domande[q].correct] || 0;
+const correctVotes = (t, r) => ROUNDS[r].domande.reduce((sum, d, q) => sum + qCorrect(t, r, q), 0);
 function roundPct(t, r) {
   const m = S.teams[t].members, n = ROUNDS[r].domande.length;
-  if (!m) return 0;
-  return Math.min(100, Math.ceil(correctVotes(t, r) / (m * n) * 100 - 1e-9));
+  return m ? Math.min(100, correctVotes(t, r) / (m * n) * 100) : 0;
 }
-const fasciaOf = pct => FASCE.find(f => pct >= f.min) || FASCE[FASCE.length - 1];
+const fasciaOf = pct => FASCE.find(f => pct >= f.min - 1e-9) || FASCE[FASCE.length - 1];
 function roundScore(t, r) {
-  const pct = roundPct(t, r), f = fasciaOf(pct), v = VALORI[S.square[t][r]] || { mult: 1 };
-  return { pct, f, v, pts: f.mult ? Math.round(pct * v.mult * f.mult) : 0 };
+  const pct = roundPct(t, r), f = fasciaOf(pct), base = Math.ceil(pct - 1e-9), rm = ROUNDS[r].mult || 1;
+  return { pct, base, f, rm, pts: Math.round(base * rm * f.mult) };
 }
-function teamSummary(t) {
+function teamSummary(t, upTo) {
+  const last = upTo === undefined ? ROUNDS.length - 1 : upTo;
   let pts = 0, saved = 0, corr = 0, tot = 0;
-  ROUNDS.forEach((r, ri) => {
+  for (let ri = 0; ri <= last; ri++) {
     const s = roundScore(t, ri);
     pts += s.pts; if (s.f.mult > 0) saved++;
-    corr += correctVotes(t, ri); tot += S.teams[t].members * r.domande.length;
-  });
-  return { pts, saved, avg: tot ? Math.round(corr / tot * 100) : 0 };
+    corr += correctVotes(t, ri); tot += S.teams[t].members * ROUNDS[ri].domande.length;
+  }
+  return { pts, saved, avg: tot ? corr / tot * 100 : 0 };
 }
+const maxScore = () => ROUNDS.reduce((s, r) => s + 100 * (r.mult || 1) * (FASCE[0] ? FASCE[0].mult : 1), 0);
 
 /* ===================== PIXEL HELPERS ===================== */
 let g;
@@ -335,83 +327,121 @@ const P = (x, y, c) => R(x, y, 1, 1, c);
 function hash(str) { let h = 2166136261; for (const ch of str) h = Math.imul(h ^ ch.charCodeAt(0), 16777619); return h >>> 0; }
 
 /* ===================== AVATARS ===================== */
-// 24x24 pixel portraits generated from the victim's name. During the game they are shown as a mosaic.
-const AV = 24;
-const SKINS = [["#f6d3b3", "#d9a988"], ["#e8b48f", "#c48a66"], ["#c98e62", "#a06a43"], ["#8d5a3b", "#6b4029"], ["#f1c7a0", "#cf9c78"]];
-const HAIRS = ["#2a1a12", "#5a3418", "#a8642a", "#e2b552", "#141016", "#7a2a1e"];
-const SHIRTS = ["#2f6bff", "#ff2246", "#3ef0ff", "#ffd23f", "#9c2aa0", "#a8b400", "#eb9700", "#ece8f7", "#007c92"];
+// 32x32 pixel portraits generated from the victim's name: shaded face, eyes with
+// highlights, brows, nose, mouth, hair style, clothes with collar and a backdrop.
+const AV = 32;
+const SKINS = [
+  ["#ffe0c4", "#f2c19e", "#d99a74"], ["#f4c8a0", "#e0a77c", "#bf8059"],
+  ["#d9a275", "#c08657", "#9a643c"], ["#a8714a", "#8c5a37", "#6b4027"], ["#7a4b2f", "#633b23", "#4a2a18"]
+];
+const HAIRS = [["#2a1a12", "#4a3020"], ["#5a3418", "#7d4c26"], ["#a8642a", "#cf8a45"], ["#e2b552", "#f6d886"], ["#141016", "#2e2633"], ["#8a2a1e", "#b8452f"], ["#3d2a5e", "#5f458c"]];
+const GREYS = [["#bdb9c9", "#e2dfea"], ["#8f8b9c", "#b4b0c1"]];
+const SHIRTS = [["#2f6bff", "#1d48b8"], ["#e6324b", "#a51d33"], ["#20b8cc", "#127c8c"], ["#f2b51f", "#b9850f"], ["#9c2aa0", "#6c1b70"], ["#8fa31a", "#62700f"], ["#eb7f00", "#ad5c00"], ["#e8e4f2", "#b5b0c6"], ["#2b2b3a", "#16161f"]];
+const BACKS = ["#2b2342", "#23304a", "#3a2338", "#20383a", "#3a3020", "#2c2a48"];
 function avatarGrid(v) {
-  const r = rng(hash(v.nome + "|" + v.eta));
+  const r = rng(hash(v.nome));
   const pick = a => a[Math.floor(r() * a.length)];
   const G = Array.from({ length: AV }, () => new Array(AV).fill(null));
   const set = (x, y, c) => { if (x >= 0 && y >= 0 && x < AV && y < AV) G[y][x] = c; };
-  const [skin, skinD] = pick(SKINS);
-  const old = v.eta >= 55;
-  const hair = old ? (r() < 0.5 ? "#c9c6d4" : "#8f8b9c") : pick(HAIRS);
-  const shirt = pick(SHIRTS);
-  const style = old ? pick(["short", "bald", "bun", "short"]) : pick(["short", "long", "bun", "long", "short", "spiky"]);
-  const glasses = r() < (old ? 0.65 : 0.25);
+  const get = (x, y) => (x >= 0 && y >= 0 && x < AV && y < AV ? G[y][x] : null);
   const ell = (cx, cy, rx, ry, x, y) => ((x + 0.5 - cx) / rx) ** 2 + ((y + 0.5 - cy) / ry) ** 2 <= 1;
-  // long hair behind the head
-  if (style === "long") for (let y = 6; y < 19; y++) for (let x = 5; x < 19; x++) if (ell(12, 12, 7.2, 9, x, y)) set(x, y, hair);
-  // shirt
-  for (let y = 18; y < AV; y++) { const w = 6 + (y - 18) * 1.2; for (let x = Math.round(12 - w); x < Math.round(12 + w); x++) set(x, y, shirt); }
-  for (let x = 10; x < 14; x++) set(x, 18, skin);
+  const [sk, skM, skD] = pick(SKINS);
+  const old = r() < 0.18;
+  const [hr, hrL] = old ? pick(GREYS) : pick(HAIRS);
+  const [sh, shD] = pick(SHIRTS);
+  const style = pick(old ? ["short", "bald", "bun", "short", "side"] : ["short", "long", "bun", "long", "curly", "spiky", "side", "bob"]);
+  const glasses = r() < (old ? 0.6 : 0.22);
+  const beard = (style === "short" || style === "spiky" || style === "side" || style === "bald") && r() < 0.3;
+  const smile = r() < 0.6;
+  const blush = r() < 0.4;
+
+  // hair behind the head
+  if (style === "long") for (let y = 6; y < 27; y++) for (let x = 6; x < 26; x++) if (ell(16, 15, 10, 12.5, x, y)) set(x, y, hr);
+  if (style === "bob") for (let y = 5; y < 22; y++) for (let x = 6; x < 26; x++) if (ell(16, 13, 10, 9.5, x, y)) set(x, y, hr);
+  if (style === "curly") for (let i = 0; i < 26; i++) { const a = i / 26 * Math.PI * 2; const cx = 16 + Math.cos(a) * 9.5, cy = 12 + Math.sin(a) * 9; for (let y = 0; y < 26; y++) for (let x = 0; x < AV; x++) if (cy < 15 && ell(cx, cy, 2.6, 2.6, x, y)) set(x, y, hr); }
+
+  // shoulders and shirt
+  for (let y = 25; y < AV; y++) {
+    const w = 8 + (y - 25) * 1.6;
+    for (let x = Math.round(16 - w); x < Math.round(16 + w); x++) set(x, y, x > 16 + w * 0.55 ? shD : sh);
+  }
+  // collar (V neck)
+  for (let y = 25; y < 29; y++) { const w = 3 - (y - 25) * 0.75; for (let x = Math.round(16 - w); x < Math.round(16 + w); x++) set(x, y, sk); }
+  set(12, 25, shD); set(19, 25, shD);
   // neck
-  for (let y = 15; y < 19; y++) for (let x = 10; x < 14; x++) set(x, y, y === 15 ? skinD : skin);
+  for (let y = 20; y < 26; y++) for (let x = 13; x < 19; x++) set(x, y, y < 22 ? skD : (x > 16 ? skM : sk));
   // head
-  for (let y = 2; y < 18; y++) for (let x = 4; x < 20; x++) if (ell(12, 10, 6, 7, x, y)) set(x, y, skin);
-  set(5, 10, skinD); set(18, 10, skinD);
+  for (let y = 3; y < 23; y++) for (let x = 7; x < 25; x++) if (ell(16, 13, 7.6, 9.2, x, y)) set(x, y, x >= 21 ? skM : sk);
+  for (let y = 3; y < 23; y++) for (let x = 7; x < 25; x++) if (ell(16, 13, 7.6, 9.2, x, y) && !ell(15.4, 12.4, 7.4, 9, x, y)) set(x, y, skM);
+  // ears
+  for (let y = 12; y < 16; y++) { set(7, y, skM); set(24, y, skD); }
+  set(8, 13, skD); set(23, 13, skD);
+
   // hair on top
-  if (style !== "bald") {
-    for (let y = 1; y < 9; y++) for (let x = 4; x < 20; x++)
-      if (ell(12, 9, 6.6, 7.4, x, y) && (y < 6 || x < 7 || x > 16)) set(x, y, hair);
-    if (style === "bun") for (let y = 0; y < 4; y++) for (let x = 9; x < 15; x++) if (ell(12, 1.6, 2.8, 2, x, y)) set(x, y, hair);
-    if (style === "spiky") [[7, 1], [10, 0], [13, 0], [16, 1]].forEach(([x, y]) => { set(x, y, hair); set(x + 1, y, hair); });
+  const capTop = (cy, ry) => { for (let y = 1; y < 12; y++) for (let x = 6; x < 26; x++) if (ell(16, cy, 8.4, ry, x, y) && y < cy) set(x, y, hr); };
+  if (style === "bald") {
+    for (let y = 9; y < 15; y++) { set(8, y, hr); set(9, y, hr); set(22, y, hr); set(23, y, hr); }
   } else {
-    for (let y = 7; y < 11; y++) { set(5, y, hair); set(6, y, hair); set(17, y, hair); set(18, y, hair); }
+    capTop(11, 8.6);
+    // fringe
+    if (style === "side") for (let x = 8; x < 24; x++) { const h = Math.round(7 + (x - 8) * 0.25); for (let y = 6; y < h; y++) set(x, y, hr); }
+    else if (style === "bob" || style === "long") for (let x = 9; x < 24; x++) { const h = x < 16 ? 9 : 8; for (let y = 6; y < h; y++) set(x, y, hr); }
+    else for (let x = 9; x < 24; x++) set(x, 6, hr);
+    // sideburns
+    for (let y = 7; y < 12; y++) { set(8, y, hr); set(23, y, hr); }
+    if (style === "long" || style === "bob") for (let y = 7; y < (style === "long" ? 24 : 19); y++) { set(7, y, hr); set(8, y, hr); set(23, y, hr); set(24, y, hr); }
+    if (style === "bun") for (let y = 0; y < 5; y++) for (let x = 11; x < 21; x++) if (ell(16, 2.5, 3.6, 2.6, x, y)) set(x, y, hr);
+    if (style === "spiky") [[9, 2], [12, 1], [15, 0], [18, 1], [21, 2]].forEach(([x, y]) => { for (let k = 0; k < 3; k++) { set(x, y + k, hr); set(x + 1, y + k, hr); } });
+    // highlight
+    for (let x = 11; x < 16; x++) set(x, 3, get(x, 3) === hr ? hrL : get(x, 3));
+    set(10, 4, get(10, 4) === hr ? hrL : get(10, 4));
   }
+
   // face
-  const eye = "#1a1222";
-  set(9, 10, eye); set(14, 10, eye);
-  set(9, 9, skinD); set(14, 9, skinD);
-  set(11, 13, skinD); set(12, 13, skinD);
-  set(10, 14, "#9a3b44"); set(11, 14, "#9a3b44"); set(12, 14, "#9a3b44"); set(13, 14, "#9a3b44");
+  const brow = old ? hr : "#2a1a12";
+  [[10, 10], [11, 10], [12, 10], [19, 10], [20, 10], [21, 10]].forEach(([x, y]) => set(x, y, style === "bald" ? skD : brow));
+  // eyes: white, iris, pupil, highlight
+  [[10, 12], [11, 12], [12, 12], [19, 12], [20, 12], [21, 12], [10, 13], [12, 13], [19, 13], [21, 13]].forEach(([x, y]) => set(x, y, "#ffffff"));
+  [[11, 13], [20, 13]].forEach(([x, y]) => set(x, y, "#1a1222"));
+  [[11, 12], [20, 12]].forEach(([x, y]) => set(x, y, "#3b2a4a"));
+  set(10, 14, skM); set(11, 14, skM); set(12, 14, skM); set(19, 14, skM); set(20, 14, skM); set(21, 14, skM);
+  // nose
+  set(16, 14, skM); set(16, 15, skM); set(15, 16, skD); set(16, 16, skD); set(17, 16, skM);
+  // cheeks
+  if (blush) { set(10, 16, "#f0948a"); set(11, 16, "#f0948a"); set(20, 16, "#f0948a"); set(21, 16, "#f0948a"); }
+  // mouth
+  const lip = "#9a3b44";
+  if (smile) { set(13, 18, lip); set(18, 18, lip); for (let x = 14; x < 18; x++) set(x, 19, lip); for (let x = 14; x < 18; x++) set(x, 18, "#ffffff"); }
+  else { for (let x = 14; x < 18; x++) set(x, 19, lip); }
+  // beard
+  if (beard) for (let y = 17; y < 23; y++) for (let x = 8; x < 24; x++) if (ell(16, 13, 7.6, 9.2, x, y) && (y > 19 || x < 11 || x > 20) && get(x, y) !== lip) set(x, y, hr);
+  // glasses
   if (glasses) {
-    const gc = "#0e0a16";
-    [[7, 9], [8, 9], [9, 9], [10, 9], [13, 9], [14, 9], [15, 9], [16, 9], [7, 11], [8, 11], [9, 11], [10, 11], [13, 11], [14, 11], [15, 11], [16, 11],
-     [7, 10], [10, 10], [13, 10], [16, 10], [11, 10], [12, 10]].forEach(([x, y]) => set(x, y, gc));
+    const gc = "#141018";
+    for (let x = 9; x < 14; x++) { set(x, 11, gc); set(x, 15, gc); }
+    for (let x = 18; x < 23; x++) { set(x, 11, gc); set(x, 15, gc); }
+    for (let y = 11; y < 16; y++) { set(9, y, gc); set(13, y, gc); set(18, y, gc); set(22, y, gc); }
+    set(14, 12, gc); set(15, 12, gc); set(16, 12, gc); set(17, 12, gc);
   }
+
   // outline
   const out = G.map(row => row.slice());
   for (let y = 0; y < AV; y++) for (let x = 0; x < AV; x++) {
     if (G[y][x]) continue;
-    if ([[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => G[y + dy] && G[y + dy][x + dx])) out[y][x] = "#0e0a16";
+    if ([[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => get(x + dx, y + dy))) out[y][x] = "#0e0a16";
   }
-  return out;
+  return { grid: out, back: pick(BACKS) };
 }
-function avatarCanvas(v, censored, cls) {
+function avatarCanvas(v, cls) {
   const c = document.createElement("canvas");
   c.width = AV; c.height = AV; c.className = "avatar" + (cls ? " " + cls : "");
   g = c.getContext("2d");
-  R(0, 0, AV, AV, "#2b2342");
-  const G = avatarGrid(v);
-  if (!censored) {
-    G.forEach((row, y) => row.forEach((col, x) => { if (col) P(x, y, col); }));
-  } else {
-    const B = 4;
-    for (let by = 0; by < AV; by += B) for (let bx = 0; bx < AV; bx += B) {
-      const counts = {};
-      for (let y = by; y < by + B; y++) for (let x = bx; x < bx + B; x++) { const k = G[y][x] || "#2b2342"; counts[k] = (counts[k] || 0) + 1; }
-      const col = Object.keys(counts).sort((a, b) => counts[b] - counts[a])[0];
-      R(bx, by, B, B, col);
-    }
-    R(9, 8, 6, 9, "rgba(5,3,8,0.78)");
-    g.fillStyle = "#ffd23f";
-    [[11, 9], [12, 9], [13, 10], [12, 11], [12, 12], [12, 14]].forEach(([x, y]) => P(x, y, "#ffd23f"));
-  }
+  const { grid, back } = avatarGrid(v);
+  R(0, 0, AV, AV, back);
+  for (let y = 0; y < AV; y += 2) for (let x = (y / 2) % 2 ? 1 : 0; x < AV; x += 4) P(x, y, "rgba(255,255,255,0.04)");
+  grid.forEach((row, y) => row.forEach((col, x) => { if (col) P(x, y, col); }));
   c.setAttribute("role", "img");
-  c.setAttribute("aria-label", censored ? "Ritratto nascosto per privacy" : `Ritratto di ${v.nome}`);
+  c.setAttribute("aria-label", `Ritratto di ${v.nome}`);
   return c;
 }
 
@@ -461,7 +491,7 @@ function drawBg() {
 
 /* ===================== RENDER ===================== */
 const $ = id => document.getElementById(id);
-const panel = $("panel");
+const app = $("app"), panel = $("panel");
 const esc = s => String(s).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
 const tStyle = t => `--tc:${TEAM_STYLE[t].col};--ti:${TEAM_STYLE[t].ink}`;
 $("gameName").textContent = (C.title || "Cyberquiz").toUpperCase();
@@ -469,55 +499,64 @@ $("gameSub").textContent = C.eyebrow || "";
 
 function renderTrack() {
   const tr = $("track");
-  if (view !== "game" || S.phase === "setup") { tr.innerHTML = ""; $("pauseBtn").hidden = true; return; }
-  $("pauseBtn").hidden = S.phase === "final";
+  const inGame = view === "game" && S.phase !== "setup";
+  app.classList.toggle("bare", view === "menu");
+  $("pauseBtn").hidden = !inGame || S.phase === "final";
+  if (!inGame) { tr.innerHTML = ""; return; }
   tr.innerHTML = ROUNDS.map((r, ri) => {
-    const now = ri === S.ri && !["intro", "final", "credits"].includes(S.phase);
+    const now = ri === S.ri && !["intro", "final"].includes(S.phase);
     const pips = r.domande.map((d, qi) => {
       let c = "";
-      if (ri < S.ri || S.phase === "final" || S.phase === "credits" || (ri === S.ri && S.phase === "roundResult")) c = "done";
-      else if (ri === S.ri && S.phase === "question") c = qi < S.qi ? "done" : qi === S.qi ? "now" : "";
+      if (ri < S.ri || S.phase === "final" || (ri === S.ri && S.phase === "roundResult")) c = "done";
+      else if (ri === S.ri && (S.phase === "question" || S.phase === "reveal")) c = qi < S.qi || (qi === S.qi && S.phase === "reveal") ? "done" : qi === S.qi ? "now" : "";
       return `<span class="trk-pip ${c}"></span>`;
     }).join("");
-    return `<div class="trk${now ? " now" : ""}"><span class="trk-name">${esc(r.nome.toUpperCase())}</span><div class="trk-pips">${pips}</div></div>`;
+    return `<div class="trk${now ? " now" : ""}"><span class="trk-name">${esc(r.nome.toUpperCase())} <b>×${fmt(r.mult || 1)}</b></span><div class="trk-pips">${pips}</div></div>`;
   }).join("");
 }
 
 function render() {
   renderTrack();
+  panel.classList.toggle("result", view === "game" && S.phase === "roundResult");
   const errs = contentErrors();
   if (errs.length) {
     panel.innerHTML = `<p class="eyebrow">Errore nei contenuti</p><h1 class="title">Controlla content.js</h1>${errs.map(e => `<p class="lede">${esc(e)}</p>`).join("")}`;
     return;
   }
-  if (view === "resume") return renderResume();
+  if (view === "menu") return renderMenu();
   if (view === "setup" || S.phase === "setup") return renderSetup();
-  ({ intro: renderIntro, roundIntro: renderRoundIntro, question: renderQuestion, roundResult: renderRoundResult, credits: renderFinal, final: renderFinal }[S.phase] || renderSetup)();
+  ({ intro: renderIntro, roundIntro: renderRoundIntro, question: renderQuestion, reveal: renderReveal, roundResult: renderRoundResult, final: renderFinal }[S.phase] || renderMenu)();
+  panel.scrollTop = 0;
 }
 
-function renderResume() {
-  const s = loadSave();
-  if (!s) { view = "setup"; return render(); }
-  const where = s.phase === "final" || s.phase === "credits" ? "Partita conclusa, classifica pronta"
-    : s.phase === "intro" ? "Regole del gioco"
-    : `Round ${s.ri + 1} · ${ROUNDS[s.ri].nome}` + (s.phase === "question" ? ` · domanda ${s.qi + 1}` : s.phase === "roundResult" ? " · risultati" : "");
-  const when = s.savedAt ? new Date(s.savedAt).toLocaleString("it-IT", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }) : "";
+function renderMenu() {
+  const s = unfinished();
+  let where = "";
+  if (s) {
+    where = s.phase === "intro" ? "regole del gioco"
+      : `manche ${s.ri + 1}, ${ROUNDS[s.ri].nome}` + (s.phase === "question" || s.phase === "reveal" ? `, domanda ${s.qi + 1}` : s.phase === "roundResult" ? ", risultati" : "");
+    const when = s.savedAt ? new Date(s.savedAt).toLocaleString("it-IT", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }) : "";
+    where = `Partita in sospeso: ${esc(s.teams.slice(0, s.nTeams).map(t => t.name).join(", "))} · ${esc(where)}${when ? ` · ${esc(when)}` : ""}`;
+  }
   panel.innerHTML = `
-    <p class="eyebrow">Partita salvata</p>
-    <h1 class="title cool">C'è una partita in sospeso</h1>
-    <p class="lede">${esc(where)}. ${s.teams.slice(0, s.nTeams).map(t => esc(t.name)).join(", ")}.${when ? ` Ultimo salvataggio: ${esc(when)}.` : ""}</p>
-    <p class="note">Iniziare una nuova partita cancella quella salvata.</p>
-    <div class="actions">
-      <button class="btn ghost" data-act="new">${confirmNew ? "Sicuro? Premi di nuovo" : "Nuova partita"}</button>
-      <div class="right"><button class="btn" data-act="resume">Riprendi</button></div>
+    <div class="menu">
+      <p class="eyebrow">${esc(C.eyebrow || "")}</p>
+      <h1 class="logo">${esc((C.title || "Cyberquiz").toUpperCase())}</h1>
+      <p class="tag">Salvate le persone dalle truffe online</p>
+      <div class="faces" id="faces"></div>
+      <div class="stack">
+        <button class="btn big" data-act="newGame">Inizia partita</button>
+        ${s ? `<button class="btn big go" data-act="resume">Riprendi partita</button><p class="saved">${where}</p>` : ""}
+      </div>
     </div>`;
+  const faces = $("faces");
+  ROUNDS.forEach(r => faces.appendChild(avatarCanvas(r.vittime[0])));
 }
 
 function renderSetup() {
-  const n = S.nTeams;
-  const hasSave = !!loadSave();
+  const n = S.nTeams, pending = unfinished();
   panel.innerHTML = `
-    <p class="eyebrow">${esc(C.eyebrow || "")}</p>
+    <p class="eyebrow">Nuova partita</p>
     <h1 class="title">Prepara la partita</h1>
     <p class="lede">Scegli quante squadre giocano e quante persone ci sono in ogni squadra. Il punteggio si calcola in percentuale sui componenti: chi non vota conta come risposta sbagliata.</p>
     <div class="field">
@@ -543,60 +582,70 @@ function renderSetup() {
         </div>`).join("")}
     </div>
     <div class="actions">
-      ${hasSave ? `<button class="btn ghost" data-act="toResume">Torna alla partita salvata</button>` : "<span></span>"}
-      <div class="right"><button class="btn" data-act="start">${hasSave ? "Inizia (sovrascrive il salvataggio)" : "Inizia la partita"}</button></div>
+      <button class="btn ghost" data-act="toMenu">Menu</button>
+      <div class="right">
+        ${pending ? `<p class="warnline">Iniziando, la partita in sospeso verrà cancellata.</p>` : ""}
+        <button class="btn" data-act="start">Inizia la partita</button>
+      </div>
     </div>`;
 }
 
 function renderIntro() {
-  const vals = VKEYS.map(k => VALORI[k]);
+  const bandTxt = (f, i) => {
+    if (i === 0) return `${f.min}–100%`;
+    if (f.min === 0) return `sotto il ${FASCE[i - 1].min}%`;
+    return `${f.min}–${fmt(FASCE[i - 1].min - 0.1, 1)}%`;
+  };
   panel.innerHTML = `
     <p class="eyebrow">Le regole</p>
     <h1 class="title">Salvate più persone che potete</h1>
-    <p class="lede">Ci sono ${ROUNDS.length} round, uno per ogni truffa. In ogni round ogni squadra deve salvare una persona che rischia di cascarci, rispondendo a ${ROUNDS[0].domande.length} domande.</p>
+    <p class="lede">Ci sono ${ROUNDS.length} manche, una per ogni truffa. In ogni manche ogni squadra deve salvare una persona che rischia di cascarci, rispondendo a ${ROUNDS[0].domande.length} domande.</p>
     <div class="rules">
-      <div class="rule"><h3>PRIVACY</h3><p>Rispettiamo la privacy delle persone da salvare: vedrete solo la loro situazione. Chi sono, e quanto era importante salvarle, lo scoprirete solo alla fine.</p></div>
-      <div class="rule"><h3>IL SALVATAGGIO</h3><div class="bands">${FASCE.map(f => `<div class="band-row" style="--bc:${BAND_COL[f.id] || "var(--gold)"}"><b>${esc(f.label.toUpperCase())}</b><span>${f.id === "truffata" ? `sotto il ${FASCE[FASCE.length - 2].min}%` : `${f.min}% o più`}</span></div>`).join("")}</div><p class="note">Percentuale di risposte esatte della squadra nel round.</p></div>
-      <div class="rule"><h3>IL PUNTEGGIO</h3><p>Ogni persona ha una posta in gioco segreta, da bassa a enorme, che moltiplica i punti. Ogni squadra le incontra tutte, in un ordine diverso.</p><p class="note">Posta in gioco: ${vals.map(v => `${esc(v.label.toLowerCase())} ×${fmt(v.mult)}`).join(" · ")}</p></div>
+      <div class="rule"><h3>COME SI RISPONDE</h3><p>Per ogni domanda ogni persona sceglie A, B, C o D. Conta la percentuale di risposte esatte della squadra: chi non risponde vale come risposta sbagliata.</p></div>
+      <div class="rule"><h3>IL SALVATAGGIO</h3><div class="bands">${FASCE.map((f, i) => `<div class="band-row" style="--bc:${BAND_COL[f.id] || "var(--gold)"}"><b>${esc(f.label.toUpperCase())}</b><span>${bandTxt(f, i)} · ×${fmt(f.mult)}</span></div>`).join("")}</div></div>
+      <div class="rule"><h3>IL PUNTEGGIO</h3><p>Punti della manche = percentuale di risposte esatte × moltiplicatore della manche × moltiplicatore del salvataggio.</p><p class="note">Moltiplicatori: ${ROUNDS.map((r, i) => `manche ${i + 1} ×${fmt(r.mult || 1)}`).join(" · ")}. Massimo ${fmt(maxScore())} punti.</p></div>
     </div>
-    <div class="actions"><span></span><div class="right"><button class="btn" data-act="toRound">Primo round</button></div></div>`;
+    <div class="actions"><button class="btn ghost" data-act="toMenuPause">Menu</button><div class="right"><button class="btn" data-act="toRound">Prima manche</button></div></div>`;
 }
 
 function renderRoundIntro() {
-  const r = ROUNDS[S.ri];
+  const r = ROUNDS[S.ri], T = teams();
   panel.innerHTML = `
-    <p class="eyebrow">Round ${S.ri + 1} di ${ROUNDS.length}</p>
+    <p class="eyebrow">Manche ${S.ri + 1} di ${ROUNDS.length} · moltiplicatore ×${fmt(r.mult || 1)}</p>
     <h1 class="title">${esc(r.nome)}</h1>
     <p class="lede">${esc(r.intro)}</p>
-    <div class="cards" id="cards"></div>
+    <div class="cards" id="cards" style="--n:${T.length}"></div>
     <div class="actions">
       <button class="btn ghost" data-act="backFromIntro">Indietro</button>
       <div class="right"><button class="btn" data-act="toQuestion">Prima domanda</button></div>
     </div>`;
   const cards = $("cards");
-  teams().forEach((t, i) => {
+  T.forEach((t, i) => {
     const v = victim(i, S.ri);
     const card = document.createElement("div");
     card.className = "vcard"; card.setAttribute("style", tStyle(i));
     card.innerHTML = `<div class="team">${esc(t.name.toUpperCase())}</div><div class="who"></div><p class="sit">${esc(v.situazione)}</p>`;
     const who = card.querySelector(".who");
-    who.appendChild(avatarCanvas(v, true));
-    who.insertAdjacentHTML("beforeend", `<span class="tag">PERSONA DA SALVARE<br>IDENTITÀ PROTETTA</span>`);
+    who.appendChild(avatarCanvas(v));
+    who.insertAdjacentHTML("beforeend", `<span class="vname">${esc(v.nome)}</span>`);
     cards.appendChild(card);
   });
 }
 
+function gridCols(n) { return `calc(var(--u) * 4.2) minmax(0, 1fr) repeat(${n}, calc(var(--u) * 17))`; }
+function gridHead(T, cols) {
+  return `<div class="vrow head" style="grid-template-columns:${cols}"><span></span><span></span>
+    ${T.map((t, i) => `<div class="thead" style="${tStyle(i)}">${esc(t.name.toUpperCase())}<br><span style="color:var(--muted)">${t.members} PERSONE</span></div>`).join("")}
+  </div>`;
+}
+
 function renderQuestion() {
-  const r = ROUNDS[S.ri], d = r.domande[S.qi], T = teams();
-  const cols = `44px minmax(0, 1fr) repeat(${T.length}, minmax(150px, auto))`;
-  const last = S.qi === r.domande.length - 1;
+  const r = ROUNDS[S.ri], d = r.domande[S.qi], T = teams(), cols = gridCols(T.length);
   panel.innerHTML = `
-    <p class="eyebrow">Round ${S.ri + 1} · ${esc(r.nome)} · domanda ${S.qi + 1} di ${r.domande.length}</p>
+    <p class="eyebrow">Manche ${S.ri + 1} · ${esc(r.nome)} · domanda ${S.qi + 1} di ${r.domande.length}</p>
     <h2 class="qtext">${esc(d.q)}</h2>
     <div class="vote-grid">
-      <div class="vrow head" style="grid-template-columns:${cols}"><span></span><span></span>
-        ${T.map((t, i) => `<div class="thead" style="${tStyle(i)}">${esc(t.name.toUpperCase())}<br><span style="color:var(--muted)">${t.members} PERSONE</span></div>`).join("")}
-      </div>
+      ${gridHead(T, cols)}
       ${d.options.map((o, oi) => `
         <div class="vrow" style="grid-template-columns:${cols}">
           <span class="letter">${LETTERS[oi]}</span>
@@ -613,12 +662,12 @@ function renderQuestion() {
       </div>
     </div>
     <div class="actions">
-      <button class="btn ghost" data-act="qPrev">${S.qi === 0 ? "Torna al round" : "Domanda precedente"}</button>
-      <div class="right"><button class="btn" data-act="qNext">${last ? "Fine round" : "Prossima domanda"}</button></div>
+      <button class="btn ghost" data-act="qPrev">${S.qi === 0 ? "Torna alla manche" : "Domanda precedente"}</button>
+      <div class="right"><button class="btn" data-act="confirm">Conferma risposte</button></div>
     </div>`;
   updateVotes();
 }
-function cell(t, o) { return S.answers[S.ri][S.qi][t]; }
+const cell = t => S.answers[S.ri][S.qi][t];
 function updateVotes() {
   teams().forEach((t, ti) => {
     const a = cell(ti), sum = a.reduce((x, y) => x + y, 0), left = t.members - sum;
@@ -630,42 +679,77 @@ function updateVotes() {
     });
     $("st" + ti).innerHTML = left === 0
       ? `<span class="ok">VOTI ${sum}/${t.members}<br>COMPLETI</span>`
-      : `<span class="warn">VOTI ${sum}/${t.members}<br>${left} NON VOTANTI</span>`;
+      : `<span class="warn">VOTI ${sum}/${t.members}<br>${left} MANCANTI = SBAGLIATE</span>`;
   });
+}
+
+function renderReveal() {
+  const r = ROUNDS[S.ri], d = r.domande[S.qi], T = teams(), cols = gridCols(T.length);
+  const last = S.qi === r.domande.length - 1;
+  panel.innerHTML = `
+    <p class="eyebrow">Manche ${S.ri + 1} · ${esc(r.nome)} · domanda ${S.qi + 1} di ${r.domande.length} · risposta</p>
+    <h2 class="qtext">${esc(d.q)}</h2>
+    <div class="vote-grid">
+      ${gridHead(T, cols)}
+      ${d.options.map((o, oi) => `
+        <div class="vrow ${oi === d.correct ? "right" : "wrong"}" style="grid-template-columns:${cols}">
+          <span class="letter">${LETTERS[oi]}</span>
+          <span class="otext">${esc(o)}</span>
+          ${T.map((t, ti) => `<div class="tcol"><span class="vcount">${answersOf(ti, S.ri, S.qi)[oi]}</span></div>`).join("")}
+        </div>`).join("")}
+      <div class="vrow head res-row" style="grid-template-columns:${cols}"><span></span><span class="note">Risposte esatte per squadra</span>
+        ${T.map((t, ti) => {
+          const c = qCorrect(ti, S.ri, S.qi), p = t.members ? c / t.members * 100 : 0;
+          return `<div class="tcol"><span class="res-pct">${pctTxt(p)}</span><span class="res-n">${c}/${t.members} GIUSTE</span></div>`;
+        }).join("")}
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn ghost" data-act="fixVotes">Correggi i voti</button>
+      <div class="right"><button class="btn" data-act="qNext">${last ? "Fine manche" : "Prossima domanda"}</button></div>
+    </div>`;
 }
 
 function renderRoundResult() {
-  const r = ROUNDS[S.ri], lastRound = S.ri === ROUNDS.length - 1;
+  const r = ROUNDS[S.ri], T = teams(), lastRound = S.ri === ROUNDS.length - 1;
+  const rows = T.map((t, i) => ({ i, t, ...teamSummary(i, S.ri) })).sort((a, b) => b.pts - a.pts);
   panel.innerHTML = `
-    <p class="eyebrow">Round ${S.ri + 1} · ${esc(r.nome)} · risultati</p>
+    <p class="eyebrow">Manche ${S.ri + 1} · ${esc(r.nome)} · risultati</p>
     <h1 class="title">Com'è andata?</h1>
-    <div class="cards" id="cards"></div>
-    ${S.recap ? `<div class="recap">${r.domande.map((d, i) => `
-      <div class="recap-item"><span class="rq">${i + 1}. ${esc(d.q)}</span><span class="ra">${LETTERS[d.correct]} · ${esc(d.options[d.correct])}</span>${d.spiegazione ? `<span class="rs">${esc(d.spiegazione)}</span>` : ""}</div>`).join("")}</div>` : ""}
+    <div class="cards" id="cards" style="--n:${T.length}"></div>
+    ${T.length > 1 ? `<table class="board small">
+      <thead><tr><th>#</th><th>CLASSIFICA DOPO ${S.ri + 1} MANCHE</th><th class="num">PERSONE SALVATE</th><th class="num">PUNTI</th></tr></thead>
+      <tbody>${rankRows(rows).map(x => `<tr class="${x.rank === 1 ? "first" : ""}" style="${tStyle(x.i)}"><td>${x.rank}</td><td class="tn">${esc(x.t.name)}</td><td class="num">${x.saved} / ${S.ri + 1}</td><td class="num">${fmt(x.pts)}</td></tr>`).join("")}</tbody>
+    </table>` : ""}
     <div class="actions">
       <button class="btn ghost" data-act="backToQ">Correggi i voti</button>
-      <div class="right">
-        <button class="btn cool" data-act="recap">${S.recap ? "Nascondi le risposte" : "Risposte giuste"}</button>
-        <button class="btn" data-act="nextRound">${lastRound ? "Titoli di coda" : "Round successivo"}</button>
-      </div>
+      <div class="right"><button class="btn" data-act="nextRound">${lastRound ? "Classifica finale" : "Manche successiva"}</button></div>
     </div>`;
   const cards = $("cards");
-  teams().forEach((t, i) => {
+  T.forEach((t, i) => {
     const v = victim(i, S.ri), s = roundScore(i, S.ri);
     const card = document.createElement("div");
-    card.className = `vcard ${animResult ? "res " : ""}${s.f.id}`;
+    card.className = `vcard ${animCards ? "anim " : ""}${s.f.id}`;
     card.setAttribute("style", `${tStyle(i)};--bc:${BAND_COL[s.f.id] || "var(--gold)"};animation-delay:${i * 0.35}s`);
-    card.innerHTML = `<div class="team">${esc(t.name.toUpperCase())}</div><div class="who"></div><div class="verdict">${esc(s.f.label.toUpperCase())}</div><p class="sit">${esc(r.esiti[s.f.id] || "")}</p>`;
-    card.querySelector(".who").appendChild(avatarCanvas(v, true));
+    card.innerHTML = `<div class="team">${esc(t.name.toUpperCase())}</div><div class="who"></div>
+      <div class="verdict">${esc(s.f.label.toUpperCase())}</div>
+      <p class="sit">${esc((r.esiti || {})[s.f.id] || "")}</p>
+      <div class="calc">${s.f.mult ? `${s.base} × ${fmt(s.rm)} × ${fmt(s.f.mult)}<b>+${fmt(s.pts)} PUNTI</b>` : `${pctTxt(s.pct)} DI RISPOSTE ESATTE<b>0 PUNTI</b>`}</div>`;
+    const who = card.querySelector(".who");
+    who.appendChild(avatarCanvas(v));
+    who.insertAdjacentHTML("beforeend", `<span class="vname">${esc(v.nome)}<br><span style="color:var(--muted);font-size:.8em">${pctTxt(s.pct)}</span></span>`);
     cards.appendChild(card);
   });
-  animResult = false;
+  animCards = false;
+}
+function rankRows(rows) {
+  let rank = 0, prev = null;
+  rows.forEach((r, k) => { if (r.pts !== prev) { rank = k + 1; prev = r.pts; } r.rank = rank; });
+  return rows;
 }
 
 function renderFinal() {
-  const rows = teams().map((t, i) => ({ i, t, ...teamSummary(i) })).sort((a, b) => b.pts - a.pts);
-  let rank = 0, prev = null;
-  rows.forEach((r, k) => { if (r.pts !== prev) { rank = k + 1; prev = r.pts; } r.rank = rank; });
+  const rows = rankRows(teams().map((t, i) => ({ i, t, ...teamSummary(i) })).sort((a, b) => b.pts - a.pts));
   panel.innerHTML = `
     <p class="eyebrow">Fine partita</p>
     <h1 class="title cool">Classifica finale</h1>
@@ -674,120 +758,67 @@ function renderFinal() {
       <tbody>${rows.map(r => `
         <tr class="${r.rank === 1 ? "first" : ""}" style="${tStyle(r.i)}">
           <td>${r.rank}</td><td class="tn">${esc(r.t.name)}</td>
-          <td class="num">${r.saved} / ${ROUNDS.length}</td><td class="num">${r.avg}%</td><td class="num">${fmt(r.pts)}</td>
+          <td class="num">${r.saved} / ${ROUNDS.length}</td><td class="num">${pctTxt(r.avg)}</td><td class="num">${fmt(r.pts)}</td>
         </tr>`).join("")}</tbody>
     </table>
     <div class="actions">
-      <button class="btn ghost" data-act="replayCredits">Rivedi i titoli di coda</button>
-      <div class="right"><button class="btn" data-act="again">Nuova partita</button></div>
+      <button class="btn ghost" data-act="backToLast">Torna all'ultima manche</button>
+      <div class="right"><button class="btn" data-act="toMenu">Menu</button></div>
     </div>`;
 }
-
-/* ===================== CREDITS ===================== */
-const credits = $("credits"), roll = $("roll");
-let crY = 0, crSpeed = 1, crPaused = false, crOn = false;
-function buildCredits() {
-  roll.innerHTML = `<h2 class="cr-h">Titoli di coda</h2><p class="cr-sub">Ecco chi erano le persone che avete provato a salvare.</p>`;
-  teams().forEach((t, i) => {
-    const sum = teamSummary(i);
-    roll.insertAdjacentHTML("beforeend", `<div style="${tStyle(i)}"><h3 class="cr-team">${esc(t.name.toUpperCase())}</h3><div class="cr-team-line"></div></div>`);
-    ROUNDS.forEach((r, ri) => {
-      const v = victim(i, ri), s = roundScore(i, ri);
-      const block = document.createElement("div");
-      block.className = "cr-v";
-      block.setAttribute("style", `--bc:${BAND_COL[s.f.id] || "var(--gold)"}`);
-      block.appendChild(avatarCanvas(v, false));
-      const calc = s.f.mult
-        ? `${s.pct}% × ${fmt(s.v.mult)} × ${fmt(s.f.mult)} = ${fmt(s.pts)} PUNTI`
-        : `${s.pct}% · NESSUN PUNTO`;
-      block.insertAdjacentHTML("beforeend", `
-        <div class="cr-scam">${esc(r.nome.toUpperCase())}</div>
-        <div class="cr-name">${esc(v.nome)}, ${v.eta} anni</div>
-        <p class="cr-story">${esc(v.storia)}</p>
-        <div class="cr-meta"><span>Posta in gioco: <b style="color:var(--gold)">${esc((s.v.label || "").toUpperCase())} ×${fmt(s.v.mult)}</b></span><span>Esito: <b>${esc(s.f.label.toUpperCase())}${s.f.mult ? " ×" + fmt(s.f.mult) : ""}</b></span></div>
-        <div class="cr-calc">${calc}</div>`);
-      roll.appendChild(block);
-    });
-    roll.insertAdjacentHTML("beforeend", `<p class="cr-total" style="${tStyle(i)}">${esc(t.name.toUpperCase())}<br>${sum.saved} PERSONE SALVATE SU ${ROUNDS.length}<br>TOTALE ${fmt(sum.pts)} PUNTI</p>`);
-  });
-  roll.insertAdjacentHTML("beforeend", `<p class="cr-end">E ora... la classifica</p>`);
-}
-function openCredits() {
-  buildCredits();
-  crY = 0; crSpeed = 1; crPaused = false; crOn = true;
-  $("crPlay").textContent = "Pausa"; $("crFast").textContent = "Veloce";
-  credits.hidden = false;
-  roll.style.transform = `translate(-50%, 0)`;
-}
-function closeCredits() {
-  crOn = false; credits.hidden = true;
-  S.phase = "final"; save(); render();
-}
-function stepCredits(dt) {
-  if (!crOn || crPaused) return;
-  crY += dt * 0.09 * crSpeed;
-  const max = roll.scrollHeight - innerHeight * 0.55;
-  if (crY >= max) { crY = max; closeCredits(); return; }
-  roll.style.transform = `translate(-50%, ${-crY}px)`;
-}
-$("crPlay").addEventListener("click", () => { crPaused = !crPaused; $("crPlay").textContent = crPaused ? "Riparti" : "Pausa"; });
-$("crFast").addEventListener("click", () => { crSpeed = crSpeed === 1 ? 3 : 1; $("crFast").textContent = crSpeed === 1 ? "Veloce" : "Normale"; });
-$("crSkip").addEventListener("click", closeCredits);
-addEventListener("keydown", e => { if (crOn && e.key === " ") { e.preventDefault(); $("crPlay").click(); } });
 
 /* ===================== ACTIONS ===================== */
 function startGame() {
   const T = S.teams.map(t => ({ name: (t.name || "").trim() || "Squadra", members: Math.max(1, t.members | 0) }));
   S = {
     phase: "intro", nTeams: S.nTeams, teams: T,
-    square: latinSquare().slice(0, S.nTeams),
+    assign: ROUNDS.map(r => shuffle(r.vittime.map((v, i) => i)).slice(0, S.nTeams)),
     answers: ROUNDS.map(r => r.domande.map(() => Array.from({ length: S.nTeams }, () => [0, 0, 0, 0]))),
-    ri: 0, qi: 0, recap: false, savedAt: 0
+    ri: 0, qi: 0, savedAt: 0
   };
   view = "game"; save(); render();
 }
-function go(phase, patch) { Object.assign(S, patch || {}, { phase }); save(); render(); panel.scrollTop = 0; }
+function go(phase, patch) { Object.assign(S, patch || {}, { phase }); save(); render(); }
 function setVote(t, o, val) {
   const a = cell(t), others = a.reduce((x, y, i) => x + (i === o ? 0 : y), 0);
   a[o] = Math.max(0, Math.min(S.teams[t].members - others, val | 0));
   save(); updateVotes();
 }
+function toMenu() { if (view === "game" && S.phase !== "setup") save(); view = "menu"; render(); }
 
 panel.addEventListener("click", e => {
   const b = e.target.closest("[data-act]");
   if (!b || b.disabled) return;
   const act = b.dataset.act, t = +b.dataset.t, o = +b.dataset.o;
   switch (act) {
+    case "newGame": { const s = loadSave(); S = freshSetup(s ? s.teams.slice(0, s.nTeams) : null); view = "setup"; render(); break; }
+    case "resume": { const s = unfinished(); if (s) { S = s; view = "game"; render(); } break; }
+    case "toMenu": case "toMenuPause": toMenu(); break;
     case "nt-": S.nTeams = Math.max(1, S.nTeams - 1); render(); break;
     case "nt+": S.nTeams = Math.min(4, S.nTeams + 1); render(); break;
     case "m-": S.teams[t].members = Math.max(1, S.teams[t].members - 1); render(); panel.querySelector(`[data-act="m-"][data-t="${t}"]`)?.focus(); break;
     case "m+": S.teams[t].members = Math.min(200, S.teams[t].members + 1); render(); panel.querySelector(`[data-act="m+"][data-t="${t}"]`)?.focus(); break;
     case "start": startGame(); break;
-    case "toResume": confirmNew = false; view = "resume"; render(); break;
-    case "resume": { const s = loadSave(); if (s) { S = s; view = "game"; if (S.phase === "credits") S.phase = "final"; render(); } break; }
-    case "new":
-      if (!confirmNew) { confirmNew = true; render(); break; }
-      confirmNew = false; { const s = loadSave(); S = freshSetup(s ? s.teams.slice(0, s.nTeams) : null); } view = "setup"; render(); break;
     case "toRound": go("roundIntro", { ri: 0, qi: 0 }); break;
-    case "backFromIntro": S.ri === 0 ? go("intro") : go("roundResult", { ri: S.ri - 1, recap: false }); break;
+    case "backFromIntro": S.ri === 0 ? go("intro") : go("roundResult", { ri: S.ri - 1 }); break;
     case "toQuestion": go("question", { qi: 0 }); break;
     case "v+": setVote(t, o, cell(t)[o] + 1); break;
     case "v-": setVote(t, o, cell(t)[o] - 1); break;
-    case "qPrev": S.qi === 0 ? go("roundIntro") : go("question", { qi: S.qi - 1 }); break;
-    case "qNext": S.qi < ROUNDS[S.ri].domande.length - 1 ? go("question", { qi: S.qi + 1 }) : (animResult = true, go("roundResult", { recap: false })); break;
-    case "backToQ": go("question", { qi: ROUNDS[S.ri].domande.length - 1 }); break;
-    case "recap": S.recap = !S.recap; save(); render(); break;
-    case "nextRound":
-      if (S.ri < ROUNDS.length - 1) go("roundIntro", { ri: S.ri + 1, qi: 0, recap: false });
-      else { S.phase = "credits"; save(); renderTrack(); openCredits(); }
+    case "qPrev": S.qi === 0 ? go("roundIntro") : go("reveal", { qi: S.qi - 1 }); break;
+    case "confirm": go("reveal"); break;
+    case "fixVotes": go("question"); break;
+    case "qNext":
+      if (S.qi < ROUNDS[S.ri].domande.length - 1) go("question", { qi: S.qi + 1 });
+      else { animCards = true; go("roundResult"); }
       break;
-    case "replayCredits": openCredits(); break;
-    case "again": S = freshSetup(teams()); view = "setup"; render(); break;
+    case "backToQ": go("reveal", { qi: ROUNDS[S.ri].domande.length - 1 }); break;
+    case "nextRound": S.ri < ROUNDS.length - 1 ? go("roundIntro", { ri: S.ri + 1, qi: 0 }) : go("final"); break;
+    case "backToLast": go("roundResult", { ri: ROUNDS.length - 1 }); break;
   }
 });
 panel.addEventListener("input", e => {
   const el = e.target;
-  if (el.dataset.name !== undefined) { S.teams[+el.dataset.name].name = el.value; return; }
+  if (el.dataset.name !== undefined) S.teams[+el.dataset.name].name = el.value;
 });
 panel.addEventListener("change", e => {
   const el = e.target;
@@ -796,19 +827,17 @@ panel.addEventListener("change", e => {
 });
 panel.addEventListener("focusin", e => { if (e.target.classList.contains("numin") && e.target.select) e.target.select(); });
 panel.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.classList.contains("numin")) e.target.blur(); });
-$("pauseBtn").addEventListener("click", () => { save(); confirmNew = false; view = "resume"; render(); });
+$("pauseBtn").addEventListener("click", toMenu);
 
 /* ===================== LOOP ===================== */
 function resize() { sizeBg(); drawBg(); }
 addEventListener("resize", resize);
-let last = 0, lastFrame = 0;
+let last = 0;
 function loop(now) {
-  const dt = lastFrame ? Math.min(64, now - lastFrame) : 16; lastFrame = now;
-  stepCredits(dt);
-  if (now - last >= 1000 / 12) { last = now; tick++; if (tick % 3 === 0 && !crOn) drawBg(); }
+  if (now - last >= 1000 / 12) { last = now; tick++; if (tick % 3 === 0) drawBg(); }
   requestAnimationFrame(loop);
 }
-if (loadSave()) view = "resume";
+window.CQ_avatar = avatarCanvas; // used by the preview tool
 resize(); render();
 requestAnimationFrame(loop);
 })();
