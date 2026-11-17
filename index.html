@@ -259,7 +259,17 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--volt); outl
 .board.final tr.hide { visibility: hidden; }
 .board.final tr.show { animation: slidein 0.5s steps(5) both; }
 @keyframes slidein { from { transform: translateX(calc(var(--u) * 6)); opacity: 0; } to { transform: none; opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .vcard.anim, .vrow.right, .pod.show, .pod.win .crown, .pod.win .pod-block, .board.final tr.show { animation: none; } }
+/* page transition: quick stepped pixel wipe + slide */
+.panel.enter > * { animation: pageIn 0.38s steps(6) both; }
+.panel.enter > *:nth-child(2) { animation-delay: 0.04s; }
+.panel.enter > *:nth-child(3) { animation-delay: 0.08s; }
+.panel.enter > *:nth-child(n+4) { animation-delay: 0.12s; }
+@keyframes pageIn { from { opacity: 0; transform: translateY(calc(var(--u) * 2)); clip-path: inset(0 0 100% 0); } to { opacity: 1; transform: none; clip-path: inset(0 0 0 0); } }
+.hud-right { display: flex; gap: calc(var(--u) * 1); align-items: center; }
+.panel { position: relative; }
+.menu-fs { position: absolute; top: calc(var(--u) * 2); right: calc(var(--u) * 2); z-index: 2; }
+.no-fs .fs-btn { display: none; }
+@media (prefers-reduced-motion: reduce) { .panel.enter > *, .vcard.anim, .vrow.right, .pod.show, .pod.win .crown, .pod.win .pod-block, .board.final tr.show { animation: none; } }
 @media (max-aspect-ratio: 4/3) {
   body { overflow: auto; }
   .app { height: auto; min-height: 100%; }
@@ -277,7 +287,10 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--volt); outl
       <div class="game-sub" id="gameSub"></div>
     </div>
     <div class="track" id="track"></div>
-    <button class="hud-btn" id="pauseBtn" hidden>Pausa</button>
+    <div class="hud-right">
+      <button class="hud-btn fs-btn" data-fs>Schermo intero</button>
+      <button class="hud-btn" id="pauseBtn" hidden>Pausa</button>
+    </div>
   </header>
   <main class="panel" id="panel" aria-live="polite"></main>
 </div>
@@ -576,8 +589,15 @@ function renderTrack() {
   }).join("");
 }
 
+let lastScreen = "";
 function render() {
   renderTrack();
+  // page transition, only when the screen really changes (not on every vote or counter click)
+  const screen = view === "game" ? [S.phase, S.ri, S.qi, finalShown].join("|") : view;
+  if (screen !== lastScreen && !REDUCED) {
+    panel.classList.remove("enter"); void panel.offsetWidth; panel.classList.add("enter");
+  }
+  lastScreen = screen;
   panel.classList.toggle("result", view === "game" && S.phase === "roundResult");
   panel.classList.toggle("setup", view === "setup" || (view === "game" && S.phase === "setup"));
   const errs = contentErrors();
@@ -601,6 +621,7 @@ function renderMenu() {
     where = `Partita in sospeso: ${esc(s.teams.slice(0, s.nTeams).map(t => t.name).join(", "))} · ${esc(where)}${when ? ` · ${esc(when)}` : ""}`;
   }
   panel.innerHTML = `
+    <button class="hud-btn fs-btn menu-fs" data-fs>Schermo intero</button>
     <div class="menu">
       <p class="eyebrow">${esc(C.eyebrow || "")}</p>
       <h1 class="logo">${esc((C.title || "Cyberquiz").toUpperCase())}</h1>
@@ -613,6 +634,7 @@ function renderMenu() {
     </div>`;
   const faces = $("faces");
   ROUNDS.forEach(r => faces.appendChild(avatarCanvas(r.vittime[0])));
+  if (typeof fsLabel === "function") fsLabel();
 }
 
 function renderSetup() {
@@ -965,6 +987,24 @@ panel.addEventListener("change", e => {
 panel.addEventListener("focusin", e => { if (e.target.classList.contains("numin") && e.target.select) e.target.select(); });
 panel.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.classList.contains("numin")) e.target.blur(); });
 $("pauseBtn").addEventListener("click", toMenu);
+
+/* ===================== FULLSCREEN ===================== */
+const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
+function toggleFullscreen() {
+  const d = document.documentElement;
+  if (fsEl()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  else (d.requestFullscreen || d.webkitRequestFullscreen).call(d).catch?.(() => {});
+}
+function fsLabel() { document.querySelectorAll("[data-fs]").forEach(b => { b.textContent = fsEl() ? "Esci da schermo intero" : "Schermo intero"; }); }
+document.addEventListener("click", e => { if (e.target.closest("[data-fs]")) { toggleFullscreen(); } });
+document.addEventListener("fullscreenchange", fsLabel);
+document.addEventListener("webkitfullscreenchange", fsLabel);
+// F toggles fullscreen, unless the trainer is typing in a field
+addEventListener("keydown", e => {
+  if ((e.key === "f" || e.key === "F") && !e.ctrlKey && !e.metaKey && !e.altKey && !/^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName)) toggleFullscreen();
+});
+const fsSupported = !!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen);
+if (!fsSupported) document.documentElement.classList.add("no-fs");
 
 /* ===================== LOOP ===================== */
 function resize() { sizeBg(); drawBg(); }

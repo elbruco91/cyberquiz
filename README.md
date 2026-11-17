@@ -34,6 +34,10 @@ Punti della manche = percentuale di risposte esatte della squadra × moltiplicat
 
 La fascia si decide sulla percentuale già arrotondata, quindi 89,5% vale come salvataggio perfetto. Esempio: 83% nella manche 1 → 83 × 1,5 × 1,6 = 199 punti. Il massimo è 1.200 punti, a prescindere dal numero di domande.
 
+## Schermo intero
+
+Il tasto **Schermo intero** è in alto a destra, nel menu e durante il gioco. In alternativa si preme il tasto **F**. Per uscire si preme di nuovo il tasto, **F** oppure **Esc**.
+
 ## Salvataggio della partita
 
 La partita si salva da sola a ogni voto, nel browser del computer che la proietta. Il tasto **Pausa** in alto a destra riporta al menu, da cui si può riprendere. La partita salvata resta disponibile finché non se ne inizia una nuova, che la sovrascrive. Una partita conclusa non compare più tra quelle da riprendere.
