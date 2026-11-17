@@ -1,6 +1,6 @@
 # Cyberquiz · Soccorso digitale
 
-Quiz a squadre per l'aula, in pixel art, sulla lezione di Cybersecurity. In ogni manche ogni squadra deve salvare una persona da una truffa. Il formatore inserisce i voti dal computer collegato al proiettore. Tutte le schermate sono pensate per stare in un unico schermo 16:9.
+Quiz a squadre per l'aula, in pixel art, sulla lezione di Cybersecurity. In ogni manche ogni squadra deve salvare una persona da una truffa. Il formatore inserisce i voti dal computer collegato al proiettore. Tutte le schermate sono pensate per stare in un unico schermo 16:9. I font sono inclusi nella cartella `fonts`, quindi il gioco funziona anche senza connessione.
 
 ## Come si gioca
 
@@ -10,12 +10,12 @@ Quiz a squadre per l'aula, in pixel art, sulla lezione di Cybersecurity. In ogni
 4. **Manche.** Le manche sono 4, nell'ordine: Fuffa guru, Phishing/Vishing/Smishing, Sextortion, Malware. Ogni manche si apre con la presentazione della truffa e della persona che ogni squadra deve salvare. A ogni partita le persone vengono assegnate alle squadre a caso.
 5. **Domande.** Per ogni squadra il formatore inserisce quante persone hanno votato A, B, C e D, con i tasti − e + oppure scrivendo il numero. Si può andare avanti anche se mancano dei voti: le risposte non date valgono come sbagliate.
 6. **Risposta.** Dopo **Conferma risposte** la risposta giusta si illumina di verde, e per ogni squadra compaiono le risposte esatte e la percentuale. Qui il formatore spiega la domanda. Con **Correggi i voti** si torna a modificarli.
-7. **Fine manche.** Per ogni squadra compaiono l'esito del salvataggio, i punti con il calcolo e la classifica parziale.
-8. **Classifica finale.** Squadra, persone salvate, media delle risposte esatte, punteggio.
+7. **Fine manche.** Per ogni squadra compaiono l'esito del salvataggio, la percentuale e i punti, che salgono da zero con un'animazione, e la classifica parziale. Nell'ultima manche la classifica parziale non c'è, perché arriva subito dopo.
+8. **Classifica finale.** Parte nascosta dietro il tasto **Mostra classifica finale**. Premendolo, le squadre compaiono una alla volta dall'ultima alla prima, con i punteggi che salgono, e le prime tre salgono sul podio.
 
 ## Punteggio
 
-Punti della manche = percentuale di risposte esatte della squadra (arrotondata per eccesso) × moltiplicatore della manche × moltiplicatore del salvataggio.
+Punti della manche = percentuale di risposte esatte della squadra × moltiplicatore della manche × moltiplicatore del salvataggio. La percentuale si arrotonda all'intero: da ,5 in su per eccesso, sotto per difetto (85,3% → 85%, 85,5% → 86%).
 
 | Manche | Moltiplicatore |
 |---|---|
@@ -27,12 +27,12 @@ Punti della manche = percentuale di risposte esatte della squadra (arrotondata p
 | Salvataggio | Risposte esatte | Moltiplicatore |
 |---|---|---|
 | Perfetto | 90–100% | ×2 |
-| Efficace | 80–89,9% | ×1,6 |
-| Mid | 70–79,9% | ×1,3 |
-| Per un pelo | 60–69,9% | ×1 |
+| Efficace | 80–89% | ×1,6 |
+| Mid | 70–79% | ×1,3 |
+| Per un pelo | 60–69% | ×1 |
 | Fallito | sotto il 60% | ×0 |
 
-La fascia si decide sulla percentuale esatta, senza arrotondare. Esempio: 83% nella manche 1 → 83 × 1,5 × 1,6 = 199 punti. Il massimo è 1.200 punti, a prescindere dal numero di domande.
+La fascia si decide sulla percentuale già arrotondata, quindi 89,5% vale come salvataggio perfetto. Esempio: 83% nella manche 1 → 83 × 1,5 × 1,6 = 199 punti. Il massimo è 1.200 punti, a prescindere dal numero di domande.
 
 ## Salvataggio della partita
 
