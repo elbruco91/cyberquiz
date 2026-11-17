@@ -201,6 +201,25 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--volt); outl
 .panel.result .sit { font-size: calc(var(--u) * 1.95); }
 .panel.result .board.small { border-spacing: 0 calc(var(--u) * 0.45); }
 .panel.result .board.small td { padding: calc(var(--u) * 0.55) calc(var(--u) * 1.4); }
+/* setup screen: roomier, bigger type, team boxes fill the free height */
+.panel.setup { gap: calc(var(--u) * 2.6); padding: calc(var(--u) * 3.4) calc(var(--u) * 4); }
+.panel.setup .title { font-size: calc(var(--u) * 5.4); }
+.panel.setup .lede { font-size: calc(var(--u) * 2.9); font-weight: 600; line-height: 1.45; }
+.panel.setup .field { padding: calc(var(--u) * 2.2) calc(var(--u) * 2.6); }
+.panel.setup .field-label { font-size: calc(var(--u) * 3.2); }
+.panel.setup .step { width: calc(var(--u) * 6.2); height: calc(var(--u) * 6.2); font-size: calc(var(--u) * 2.4); }
+.panel.setup .numin { width: calc(var(--u) * 9); height: calc(var(--u) * 6.2); font-size: calc(var(--u) * 2.6); }
+.panel.setup .counter { gap: calc(var(--u) * 0.9); }
+.panel.setup .setup-grid { flex: 1; min-height: 0; gap: calc(var(--u) * 2.2); grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); }
+.panel.setup .team-set { border-top-width: calc(var(--u) * 1.4); padding: calc(var(--u) * 2.6) calc(var(--u) * 2.6); gap: calc(var(--u) * 2); align-content: center; }
+.panel.setup .team-set input[type=text] { font-size: calc(var(--u) * 3); padding: calc(var(--u) * 1.4) calc(var(--u) * 1.6); }
+.panel.setup .team-set .lbl { font-family: var(--f-display); font-size: calc(var(--u) * 1.4); color: var(--ti, var(--muted)); letter-spacing: 0.06em; text-transform: uppercase; }
+.panel.setup .team-set .row { flex-direction: column; align-items: stretch; gap: calc(var(--u) * 1.2); }
+.panel.setup .team-set .row .lbl { color: var(--muted); }
+.panel.setup .team-set .row .counter { justify-content: space-between; }
+.panel.setup .team-set .row .numin { flex: 1; width: auto; }
+.panel.setup .btn { font-size: calc(var(--u) * 1.7); padding: calc(var(--u) * 1.9) calc(var(--u) * 2.6); }
+.panel.setup .warnline { font-size: calc(var(--u) * 2.2); }
 @media (prefers-reduced-motion: reduce) { .vcard.anim, .vrow.right { animation: none; } }
 @media (max-aspect-ratio: 4/3) {
   body { overflow: auto; }
@@ -519,6 +538,7 @@ function renderTrack() {
 function render() {
   renderTrack();
   panel.classList.toggle("result", view === "game" && S.phase === "roundResult");
+  panel.classList.toggle("setup", view === "setup" || (view === "game" && S.phase === "setup"));
   const errs = contentErrors();
   if (errs.length) {
     panel.innerHTML = `<p class="eyebrow">Errore nei contenuti</p><h1 class="title">Controlla content.js</h1>${errs.map(e => `<p class="lede">${esc(e)}</p>`).join("")}`;
@@ -568,9 +588,10 @@ function renderSetup() {
         <button class="step" data-act="nt+" ${n >= 4 ? "disabled" : ""} aria-label="Una squadra in più">+</button>
       </div>
     </div>
-    <div class="setup-grid">
+    <div class="setup-grid" style="--n:${n}">
       ${S.teams.slice(0, n).map((t, i) => `
         <div class="team-set" style="${tStyle(i)}">
+          <span class="lbl">Squadra ${i + 1}</span>
           <input type="text" maxlength="24" value="${esc(t.name)}" data-name="${i}" aria-label="Nome della squadra ${i + 1}">
           <div class="row">
             <span class="lbl">Componenti</span>
