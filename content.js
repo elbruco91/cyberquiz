@@ -9,11 +9,11 @@
 //    esiti:       cosa succede alla vittima per ogni tipo di salvataggio
 //    vittime:     4 persone da salvare. A ogni partita il gioco ne
 //                 assegna una a caso a ogni squadra.
-//    domande:     domande a scelta multipla
+//    domande:     domande a scelta multipla o vero/falso
 //                 q:       il testo della domanda
-//                 options: le quattro risposte, nell'ordine A, B, C, D
+//                 options: da 2 a 4 risposte, nell'ordine A, B, C, D
+//                          (per un vero/falso: ["Vero", "Falso"])
 //                 correct: la risposta giusta: 0 = A, 1 = B, 2 = C, 3 = D
-//                 nota:    appunto per il formatore, non compare a schermo
 //
 //  Se un testo contiene le virgolette doppie, scrivile così: \"
 // =====================================================================
@@ -52,42 +52,21 @@ window.CYBERQUIZ = {
         { nome: "I. Ngenuo", situazione: "Vede la pubblicità di un ebook da 29 € che promette di farla diventare influencer in 30 giorni." }
       ],
       domande: [
-        { q: "\"Guadagna 1.000 € al mese da casa, ti basta il mio corso da 497 €.\" Qual è il segnale d'allarme principale?",
-          options: [
-            "Il guru parla in video invece che per iscritto",
-            "Il guru ha molti follower",
-            "Un guadagno facile e garantito, in cambio di un pagamento anticipato",
-            "Usa tante parole in inglese"
-          ],
-          correct: 2,
-          nota: "Nessuno può garantire un guadagno. Chi lo fa e chiede soldi prima di tutto, di solito guadagna proprio vendendo la promessa." },
-        { q: "Cos'è uno schema Ponzi?",
-          options: [
-            "Un sistema in cui i \"guadagni\" dei primi iscritti sono pagati con i soldi dei nuovi",
-            "Un tipo di criptovaluta",
-            "Un investimento in borsa ad alto rischio",
-            "Una strategia di marketing sui social"
-          ],
-          correct: 0,
-          nota: "Non c'è nessun guadagno reale: i soldi passano dai nuovi ai vecchi iscritti. Quando smettono di entrarne di nuovi, crolla tutto." },
-        { q: "Il guru pubblica foto con auto di lusso e screenshot dei suoi guadagni. Cosa dimostrano?",
-          options: [
-            "Che è serio, se sotto ci sono tanti commenti positivi",
-            "Che il metodo funziona, se le foto sono recenti",
-            "Che è affidabile, se ha la spunta blu",
-            "Niente: auto e screenshot si affittano o si modificano, e i soldi possono venire proprio dai corsi venduti"
-          ],
-          correct: 3,
-          nota: "Lo stile di vita esibito fa parte della vendita. Spunte e commenti si comprano o si gestiscono, quindi non provano nulla." },
-        { q: "\"Più amici porti nel programma, più guadagni.\" Se i soldi arrivano soprattutto da chi recluti e non da un prodotto venduto, di cosa si tratta?",
-          options: [
-            "Un programma di affiliazione",
-            "Uno schema piramidale",
-            "Un crowdfunding",
-            "Un cashback"
-          ],
-          correct: 1,
-          nota: "Se il guadagno dipende dal reclutare persone, alla base resta sempre qualcuno che perde i soldi. In Italia gli schemi piramidali sono vietati." }
+        { q: "Un fuffa guru è un sedicente esperto che vende corsi online promettendo guadagni lenti, costanti e sicuri.",
+          options: ["Vero", "Falso"],
+          correct: 1 },
+        { q: "I veri guadagni di un fuffa guru arrivano principalmente dai metodi che insegna nei suoi corsi.",
+          options: ["Vero", "Falso"],
+          correct: 1 },
+        { q: "Quale di queste cose tipiche millantate da un fuffa guru è sicuramente FALSA?",
+          options: ["Vive a Dubai", "Guida macchine sportive", "Guadagna attraverso i metodi che insegna nei suoi corsi", "Ha centinaia di seguaci che lo finanziano"],
+          correct: 2 },
+        { q: "Quale di queste cose starebbe pensando una persona circuita dai fuffa guru, se leggesse queste domande?",
+          options: ["Queste sono semplificazioni", "Mimmo Brambilla che conosco io non è un fuffa guru", "Io conosco un metodo che funziona", "Tutte le precedenti"],
+          correct: 3 },
+        { q: "Lo schema piramidale è un sistema di investimento in cui, oltre a vendere beni di valore, si guadagna anche dal reclutamento di nuove persone nel sistema.",
+          options: ["Vero", "Falso"],
+          correct: 1 }
       ]
     },
     // ------------------------------------------------------------- 2
@@ -109,42 +88,21 @@ window.CYBERQUIZ = {
         { nome: "D. Istratto", situazione: "Trova un link che promette skin gratis per il suo videogioco preferito, basta fare login." }
       ],
       domande: [
-        { q: "Qual è il segnale più affidabile che un'email \"della banca\" è phishing?",
-          options: [
-            "Il logo è un po' sgranato",
-            "Il mittente o il link portano a un dominio diverso da quello ufficiale",
-            "C'è qualche errore di battitura",
-            "È arrivata di sera, fuori orario d'ufficio"
-          ],
-          correct: 1,
-          nota: "Logo ed errori possono essere perfetti in un falso ben fatto. L'indirizzo reale del mittente e del link invece non si possono imitare del tutto." },
-        { q: "Un SMS del \"corriere\" ti chiede 1,99 € per consegnare un pacco. Cosa fai?",
-          options: [
-            "Pago: la cifra è piccola, il rischio è basso",
-            "Rispondo al messaggio chiedendo spiegazioni",
-            "Controllo la spedizione dall'app o dal sito ufficiale, senza usare il link",
-            "Inoltro il link a un amico per sapere se a lui funziona"
-          ],
-          correct: 2,
-          nota: "La cifra piccola serve a farti inserire i dati della carta. Si verifica sempre da un canale ufficiale, scelto da te." },
-        { q: "Come si chiama il phishing fatto via SMS?",
-          options: [
-            "Smishing",
-            "Vishing",
-            "Quishing",
-            "Spoofing"
-          ],
-          correct: 0,
-          nota: "Smishing = SMS + phishing. Vishing avviene al telefono, quishing tramite QR code. Lo spoofing è la falsificazione del mittente." },
-        { q: "Hai inserito la tua password su un sito falso. Qual è la prima cosa da fare?",
-          options: [
-            "Cancellare l'email che conteneva il link",
-            "Aspettare di vedere se succede qualcosa di strano",
-            "Disinstallare il browser",
-            "Cambiare subito la password, anche dove l'hai riusata, e attivare la verifica in due passaggi"
-          ],
-          correct: 3,
-          nota: "Il tempo conta: cambiare subito la password chiude la porta. La verifica in due passaggi blocca chi conosce già la password." }
+        { q: "Quale di queste non è una vera truffa?",
+          options: ["Phishing", "Smishing", "Vishing", "Sono tutte truffe"],
+          correct: 3 },
+        { q: "Quale di queste NON è una leva emotiva utilizzata dal phishing per truffare le persone?",
+          options: ["Nostalgia", "Fiducia", "Paura", "Urgenza"],
+          correct: 0 },
+        { q: "L'AI sta rendendo sempre più facile scoprire queste truffe.",
+          options: ["Vero", "Falso"],
+          correct: 1 },
+        { q: "Come fa un truffatore a sapere che possiedi un account Netflix?",
+          options: ["Perché non hai il controllo dei tuoi dati", "Perché hai accettato qualche cookie strano", "Sparano a caso", "Ti osservano attraverso la fotocamera del telefono o del pc"],
+          correct: 2 },
+        { q: "Ti rendi conto troppo tardi di aver fornito i dati della tua carta a uno scammer. Qual è l'autorità da contattare?",
+          options: ["La polizia stradale", "La polizia postale", "La polizia locale", "L'esercito"],
+          correct: 1 }
       ]
     },
     // ------------------------------------------------------------- 3
@@ -166,42 +124,21 @@ window.CYBERQUIZ = {
         { nome: "W. Ifisempre", situazione: "Trova nello spam un'email generica che chiede 500 € in bitcoin per non diffondere un video." }
       ],
       domande: [
-        { q: "Cos'è la sextortion?",
-          options: [
-            "Un virus che spia la webcam",
-            "Un tipo di phishing che ruba le password",
-            "La diffusione di foto senza alcuna richiesta in cambio",
-            "Un ricatto in cui qualcuno minaccia di diffondere immagini intime, vere o false, per ottenere soldi o altro"
-          ],
-          correct: 3,
-          nota: "Il cuore è il ricatto. A volte le immagini non esistono o sono generate con l'AI: la paura basta al truffatore." },
-        { q: "Un'email di ricatto contiene una tua vecchia password vera. Cosa significa, molto probabilmente?",
-          options: [
-            "Che il ricattatore ha davvero accesso al tuo computer",
-            "Che la password viene da un vecchio furto di dati: è un ricatto di massa",
-            "Che hai un virus sul telefono",
-            "Che qualcuno che conosci ti sta spiando"
-          ],
-          correct: 1,
-          nota: "Le password rubate in vecchi data breach circolano online. Il truffatore le usa per sembrare credibile. Va cambiata ovunque la usi ancora." },
-        { q: "Qualcuno ti ricatta con delle tue foto. Cosa NON conviene fare?",
-          options: [
-            "Fare screenshot e conservare le prove",
-            "Interrompere il contatto e bloccare il profilo",
-            "Pagare per far finire tutto",
-            "Chiedere aiuto a un adulto o a una persona di fiducia"
-          ],
-          correct: 2,
-          nota: "Pagare non chiude il ricatto: segnala che sei disposto a pagare ancora. Prove, blocco e aiuto sono le mosse giuste." },
-        { q: "In Italia, a chi ci si rivolge per denunciare un ricatto online?",
-          options: [
-            "Alla Polizia Postale",
-            "All'amministratore del gruppo dove è iniziato tutto",
-            "A nessuno: non è un reato",
-            "Al proprio gestore telefonico"
-          ],
-          correct: 0,
-          nota: "La Polizia Postale riceve denunce e segnalazioni anche online. Per bloccare la diffusione di immagini intime ci si può rivolgere anche al Garante privacy." }
+        { q: "Un esempio di sextortion: una creator di OnlyFans si fa donare migliaia di euro da un utente ossessionato da lei, senza però dargli nulla in cambio.",
+          options: ["Vero", "Falso"],
+          correct: 1 },
+        { q: "Qualcuno ti manda un messaggio dicendo che possiede foto intime di te e che, se non gliene mandi altre, le diffonderà a tutti i tuoi amici e ai tuoi genitori. Questo è un caso di sextortion.",
+          options: ["Vero", "Falso"],
+          correct: 0 },
+        { q: "La sextortion è un fenomeno che riguarda soprattutto…",
+          options: ["Uomini sopra i 50 anni", "Donne fra i 20 e i 30 anni", "Uomini sotto i 20 anni", "Donne sopra i 60 anni"],
+          correct: 2 },
+        { q: "È impossibile essere vittima di sextortion se mantieni le tue foto intime sul tuo pc.",
+          options: ["Vero", "Falso"],
+          correct: 1 },
+        { q: "Una di queste azioni NON aiuta a tutelarsi dal rischio di subire sextortion. Quale?",
+          options: ["Evitare di mandare materiale intimo a chi non si conosce di persona", "Limitarsi a condividere certe immagini solo con il proprio partner", "Mettere il profilo privato su IG", "Non mantenere salvati certi materiali sul proprio pc"],
+          correct: 1 }
       ]
     },
     // ------------------------------------------------------------- 4
@@ -223,42 +160,21 @@ window.CYBERQUIZ = {
         { nome: "P. Opup", situazione: "Mentre legge le notizie sul tablet compare un avviso: \"Il tuo dispositivo è infetto! Scarica subito l'antivirus\"." }
       ],
       domande: [
-        { q: "Ti arriva su WhatsApp un file \"Foto_festa.apk\". Cos'è?",
-          options: [
-            "Un'app Android da installare, che può nascondere un malware",
-            "Una cartella compressa di foto",
-            "Un'immagine in un formato più leggero",
-            "Un video da guardare offline"
-          ],
-          correct: 0,
-          nota: "L'estensione .apk indica un'app. Una \"foto\" che chiede di essere installata è quasi sempre una trappola." },
-        { q: "Cos'è un ransomware?",
-          options: [
-            "Un programma che riempie lo schermo di pubblicità",
-            "Un programma che rallenta il computer per consumare corrente",
-            "Un antivirus gratuito poco affidabile",
-            "Un programma che blocca o cripta i tuoi file e chiede un riscatto"
-          ],
-          correct: 3,
-          nota: "Ransom significa riscatto. Il programma che riempie lo schermo di pubblicità si chiama adware." },
-        { q: "Dopo un attacco ransomware, cosa ti permette di recuperare i file senza pagare?",
-          options: [
-            "Riavviare il computer",
-            "Un backup recente, salvato su un supporto scollegato o su un cloud con le versioni precedenti",
-            "Una password più lunga",
-            "Installare un antivirus dopo l'attacco"
-          ],
-          correct: 1,
-          nota: "L'antivirus aiuta a prevenire, ma quando i file sono già cifrati serve una copia pulita. Il backup va tenuto separato, o il ransomware cifra anche quello." },
-        { q: "Una pagina web ti avvisa: \"Il tuo telefono è infetto! Scarica subito questo antivirus\". Cosa fai?",
-          options: [
-            "Scarico l'antivirus: meglio essere prudenti",
-            "Chiamo il numero di assistenza indicato nella pagina",
-            "Chiudo la pagina: è un falso allarme pensato per farmi installare qualcosa",
-            "Inserisco i dati della carta per la versione completa"
-          ],
-          correct: 2,
-          nota: "Un sito non può sapere se il tuo telefono è infetto. Questi avvisi si chiamano scareware: usano la paura per farti scaricare il malware." }
+        { q: "Alla fine possiamo dire che i malware sono quelli che tutti chiamano \"virus del pc\"?",
+          options: ["Sì dai", "No bro"],
+          correct: 0 },
+        { q: "Quale di questi non è un malware?",
+          options: ["Trojan", "Ransomware", "Firewall", "Spyware"],
+          correct: 2 },
+        { q: "Aggiornare telefono e pc serve a diminuire la possibilità di beccarsi dei virus.",
+          options: ["Vero", "Falso"],
+          correct: 0 },
+        { q: "Un modo comune di prendere i virus è scaricare programmi da posti strani.",
+          options: ["Vero", "Falso"],
+          correct: 0 },
+        { q: "L'antivirus serve veramente a qualcosa nel 2026?",
+          options: ["Sì", "No"],
+          correct: 0 }
       ]
     }
   ]

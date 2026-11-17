@@ -234,7 +234,7 @@ const C = window.CYBERQUIZ || {};
 const ROUNDS = C.round || [];
 const FASCE = (C.fasce || []).slice().sort((a, b) => b.min - a.min);
 const LETTERS = ["A", "B", "C", "D"];
-const SAVE_KEY = "cyberquiz_save_v2";
+const SAVE_KEY = "cyberquiz_save_v3";
 const TEAM_STYLE = [
   { name: "Squadra Viola",   col: "#9c2aa0", ink: "#dd86e3" },
   { name: "Squadra Azzurra", col: "#00b0ca", ink: "#5fdcee" },
@@ -250,7 +250,8 @@ function contentErrors() {
     if ((r.vittime || []).length < 4) e.push(`Round ${i + 1}: servono 4 vittime, una per squadra.`);
     if (!(r.domande || []).length) e.push(`Round ${i + 1}: nessuna domanda.`);
     (r.domande || []).forEach((d, j) => {
-      if ((d.options || []).length !== 4 || !(d.correct >= 0 && d.correct <= 3)) e.push(`Round ${i + 1}, domanda ${j + 1}: servono 4 risposte e una risposta giusta da 0 a 3.`);
+      const n = (d.options || []).length;
+      if (n < 2 || n > 4 || !(d.correct >= 0 && d.correct < n)) e.push(`Round ${i + 1}, domanda ${j + 1}: servono da 2 a 4 risposte e una risposta giusta valida (0 = A, 1 = B...).`);
     });
   });
   return e;
@@ -671,7 +672,8 @@ const cell = t => S.answers[S.ri][S.qi][t];
 function updateVotes() {
   teams().forEach((t, ti) => {
     const a = cell(ti), sum = a.reduce((x, y) => x + y, 0), left = t.members - sum;
-    a.forEach((n, oi) => {
+    const nOpt = ROUNDS[S.ri].domande[S.qi].options.length;
+    a.slice(0, nOpt).forEach((n, oi) => {
       const inp = panel.querySelector(`[data-vt="${ti}"][data-vo="${oi}"]`);
       if (document.activeElement !== inp) inp.value = n;
       panel.querySelector(`[data-act="v-"][data-t="${ti}"][data-o="${oi}"]`).disabled = n <= 0;

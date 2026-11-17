@@ -32,7 +32,7 @@ Punti della manche = percentuale di risposte esatte della squadra (arrotondata p
 | Per un pelo | 60–69,9% | ×1 |
 | Fallito | sotto il 60% | ×0 |
 
-La fascia si decide sulla percentuale esatta, senza arrotondare. Esempio: 83% nella manche 1 → 83 × 1,5 × 1,6 = 199 punti. Il massimo è 1.200 punti.
+La fascia si decide sulla percentuale esatta, senza arrotondare. Esempio: 83% nella manche 1 → 83 × 1,5 × 1,6 = 199 punti. Il massimo è 1.200 punti, a prescindere dal numero di domande.
 
 ## Salvataggio della partita
 
@@ -46,7 +46,7 @@ Manche, persone da salvare, domande e moltiplicatori sono tutti in `content.js`.
 
 - `mult`: moltiplicatore della manche.
 - `vittime`: quattro persone, con `nome` e `situazione`. Il ritratto in pixel si genera dal nome.
-- `domande`: `q` è il testo, `options` le quattro risposte (A, B, C, D), `correct` la posizione della risposta giusta (0 = A, 1 = B, 2 = C, 3 = D). `nota` è un appunto per il formatore e non compare a schermo.
+- `domande`: cinque per manche. `q` è il testo, `options` le risposte, da 2 a 4 (A, B, C, D; per un vero/falso `["Vero", "Falso"]`), `correct` la posizione della risposta giusta (0 = A, 1 = B, 2 = C, 3 = D).
 - `esiti`: il testo che si legge per ogni tipo di salvataggio.
 
 L'ordine delle manche è quello in cui compaiono nel file.
