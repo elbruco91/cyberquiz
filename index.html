@@ -147,16 +147,18 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--volt); outl
 .panel.setup { gap: calc(var(--u) * 2.4); padding: calc(var(--u) * 3) calc(var(--u) * 3.6); }
 
 /* ---------- Rules ---------- */
-.rules { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: calc(var(--u) * 1.6); flex: 1; min-height: 0; }
-.rule { background: var(--slot); border: 3px solid var(--edge); border-top: calc(var(--u) * 0.9) solid var(--gold); padding: calc(var(--u) * 2.2); display: flex; flex-direction: column; gap: calc(var(--u) * 1.2); }
+.rules { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: calc(var(--u) * 1.6); flex: 1 0 auto; }
+.rule { background: var(--slot); border: 3px solid var(--edge); border-top: calc(var(--u) * 0.9) solid var(--gold); padding: calc(var(--u) * 1.9) calc(var(--u) * 2.1); display: flex; flex-direction: column; gap: calc(var(--u) * 1.1); }
 .rule h3 { font-size: calc(var(--u) * 3.2); color: var(--gold); margin: 0; line-height: 1.1; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 400; }
-.rule p { margin: 0; font-size: calc(var(--u) * 2.9); line-height: 1.22; }
+.rule p { margin: 0; font-size: calc(var(--u) * 2.7); line-height: 1.22; }
+.rlist { margin: 0; padding-left: 1.1em; display: grid; gap: calc(var(--u) * 1); font-size: calc(var(--u) * 2.7); line-height: 1.18; }
+.rlist li::marker { color: var(--gold); }
 .rule .num { font-family: var(--f-display); font-size: calc(var(--u) * 1.6); color: var(--muted); }
 .bands { display: grid; gap: calc(var(--u) * 0.9); }
-.band-row { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 4px 10px; font-size: calc(var(--u) * 2.8); line-height: 1.1; }
+.band-row { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 4px 10px; font-size: calc(var(--u) * 2.6); line-height: 1.1; }
 .band-row b { font-weight: 400; color: var(--bc); text-transform: uppercase; letter-spacing: 0.04em; }
 .band-row span { white-space: nowrap; color: var(--ink); }
-.mults { display: grid; grid-template-columns: 1fr auto; gap: calc(var(--u) * 0.6) 10px; font-size: calc(var(--u) * 2.8); line-height: 1.1; }
+.mults { display: grid; grid-template-columns: 1fr auto; gap: calc(var(--u) * 0.6) 10px; font-size: calc(var(--u) * 2.6); line-height: 1.1; }
 .mults b { color: var(--gold); font-weight: 400; }
 
 /* ---------- Victim cards ---------- */
@@ -616,7 +618,7 @@ function renderMenu() {
   let where = "";
   if (s) {
     where = s.phase === "intro" ? "regole del gioco"
-      : `manche ${s.ri + 1}, ${ROUNDS[s.ri].nome}` + (s.phase === "question" || s.phase === "reveal" ? `, domanda ${s.qi + 1}` : s.phase === "roundResult" ? ", risultati" : "");
+      : `round ${s.ri + 1}, ${ROUNDS[s.ri].nome}` + (s.phase === "question" || s.phase === "reveal" ? `, domanda ${s.qi + 1}` : s.phase === "roundResult" ? ", risultati" : "");
     const when = s.savedAt ? new Date(s.savedAt).toLocaleString("it-IT", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }) : "";
     where = `Partita in sospeso: ${esc(s.teams.slice(0, s.nTeams).map(t => t.name).join(", "))} · ${esc(where)}${when ? ` · ${esc(when)}` : ""}`;
   }
@@ -681,29 +683,33 @@ function renderIntro() {
   panel.innerHTML = `
     <p class="eyebrow">Le regole</p>
     <h1 class="title">Salvate più persone che potete</h1>
-    <p class="lede">${ROUNDS.length} manche, una per ogni truffa: ${ROUNDS.map(r => esc(r.nome)).join(" · ")}. In ogni manche ogni squadra ha una persona da salvare.</p>
+    <p class="lede">${ROUNDS.length} round, uno per ogni truffa: ${ROUNDS.map(r => esc(r.nome)).join(" · ")}. In ogni round ogni squadra ha una persona da salvare.</p>
     <div class="rules">
-      <div class="rule"><span class="num">1</span><h3>Si risponde</h3>
-        <p>Ogni manche ha ${nQ} domande: a scelta multipla o vero/falso. Ognuno risponde per sé.</p>
-        <p>Chi non risponde conta come risposta sbagliata.</p></div>
-      <div class="rule"><span class="num">2</span><h3>Si scopre</h3>
-        <p>Dopo ogni domanda si accende la risposta giusta e si vede la percentuale di risposte esatte di ogni squadra.</p>
-        <p>A fine manche si scopre se la persona è stata salvata, i punti e la classifica.</p></div>
-      <div class="rule"><span class="num">3</span><h3>Il salvataggio</h3>
-        <p class="note">Percentuale di risposte esatte della squadra nella manche</p>
+      <div class="rule"><span class="num">1</span><h3>${ROUNDS.length} Round</h3>
+        <ul class="rlist">
+          <li>Ogni round ha ${nQ} domande.</li>
+          <li>Si risponde per alzata di mano.</li>
+          <li>Chi non risponde conta come risposta sbagliata.</li>
+          <li>Una volta alzata la mano non si può tornare indietro: se cambi idea, il voto non vale.</li>
+        </ul></div>
+      <div class="rule"><span class="num">2</span><h3>Punteggi e round</h3>
+        <p>I punti dipendono dalla percentuale di risposte corrette nel team (es. 8 su 10 = 80% = 80 punti).</p>
+        <p>Alcuni round assegnano più punti di altri:</p>
+        <div class="mults">${ROUNDS.map((r, i) => `<span>Round ${i + 1} · ${esc(r.nome)}</span><b>×${fmt(r.mult || 1)}</b>`).join("")}</div></div>
+      <div class="rule"><span class="num">3</span><h3>Salvali tuttx</h3>
+        <p>Salva le persone scammate per ottenere punti bonus. Se la persona viene truffata, i punti del round sono 0.</p>
         <div class="bands">${FASCE.map((f, i) => `<div class="band-row" style="--bc:${BAND_COL[f.id] || "var(--gold)"}"><b>${esc(f.label.replace(/^Salvataggio /i, ""))}</b><span>${bandTxt(f, i)} · ×${fmt(f.mult)}</span></div>`).join("")}</div></div>
-      <div class="rule"><span class="num">4</span><h3>Il punteggio</h3>
-        <p>Percentuale × moltiplicatore della manche × moltiplicatore del salvataggio.</p>
-        <div class="mults">${ROUNDS.map((r, i) => `<span>Manche ${i + 1}</span><b>×${fmt(r.mult || 1)}</b>`).join("")}</div>
-        <p class="note">Percentuali arrotondate all'intero: da ,5 in su per eccesso. Massimo ${fmt(maxScore())} punti.</p></div>
+      <div class="rule"><span class="num">4</span><h3>Vittoria</h3>
+        <p>Vince il team che totalizza più punti.</p>
+        <p class="note">Le percentuali si arrotondano all'intero: da ,5 in su per eccesso. Massimo ${fmt(maxScore())} punti.</p></div>
     </div>
-    <div class="actions"><button class="btn ghost" data-act="toMenuPause">Menu</button><div class="right"><button class="btn" data-act="toRound">Prima manche</button></div></div>`;
+    <div class="actions"><button class="btn ghost" data-act="toMenuPause">Menu</button><div class="right"><button class="btn" data-act="toRound">Primo round</button></div></div>`;
 }
 
 function renderRoundIntro() {
   const r = ROUNDS[S.ri], T = teams();
   panel.innerHTML = `
-    <p class="eyebrow">Manche ${S.ri + 1} di ${ROUNDS.length} · moltiplicatore ×${fmt(r.mult || 1)}</p>
+    <p class="eyebrow">Round ${S.ri + 1} di ${ROUNDS.length} · punti ×${fmt(r.mult || 1)}</p>
     <h1 class="title">${esc(r.nome)}</h1>
     <p class="lede">${esc(r.intro)}</p>
     <div class="cards" id="cards" style="--n:${T.length}"></div>
@@ -734,7 +740,7 @@ function gridHead(T, cols) {
 function renderQuestion() {
   const r = ROUNDS[S.ri], d = r.domande[S.qi], T = teams(), cols = gridCols(T.length);
   panel.innerHTML = `
-    <p class="eyebrow">Manche ${S.ri + 1} · ${esc(r.nome)} · domanda ${S.qi + 1} di ${r.domande.length}</p>
+    <p class="eyebrow">Round ${S.ri + 1} · ${esc(r.nome)} · domanda ${S.qi + 1} di ${r.domande.length}</p>
     <h2 class="qtext">${esc(d.q)}</h2>
     <div class="vote-grid">
       ${gridHead(T, cols)}
@@ -754,7 +760,7 @@ function renderQuestion() {
       </div>
     </div>
     <div class="actions">
-      <button class="btn ghost" data-act="qPrev">${S.qi === 0 ? "Torna alla manche" : "Domanda precedente"}</button>
+      <button class="btn ghost" data-act="qPrev">${S.qi === 0 ? "Torna al round" : "Domanda precedente"}</button>
       <div class="right"><button class="btn" data-act="confirm">Conferma risposte</button></div>
     </div>`;
   updateVotes();
@@ -780,7 +786,7 @@ function renderReveal() {
   const r = ROUNDS[S.ri], d = r.domande[S.qi], T = teams(), cols = gridCols(T.length);
   const last = S.qi === r.domande.length - 1;
   panel.innerHTML = `
-    <p class="eyebrow">Manche ${S.ri + 1} · ${esc(r.nome)} · domanda ${S.qi + 1} di ${r.domande.length} · risposta</p>
+    <p class="eyebrow">Round ${S.ri + 1} · ${esc(r.nome)} · domanda ${S.qi + 1} di ${r.domande.length} · risposta</p>
     <h2 class="qtext">${esc(d.q)}</h2>
     <div class="vote-grid">
       ${gridHead(T, cols)}
@@ -799,7 +805,7 @@ function renderReveal() {
     </div>
     <div class="actions">
       <button class="btn ghost" data-act="fixVotes">Correggi i voti</button>
-      <div class="right"><button class="btn" data-act="qNext">${last ? "Fine manche" : "Prossima domanda"}</button></div>
+      <div class="right"><button class="btn" data-act="qNext">${last ? "Fine round" : "Prossima domanda"}</button></div>
     </div>`;
 }
 
@@ -807,16 +813,16 @@ function renderRoundResult() {
   const r = ROUNDS[S.ri], T = teams(), lastRound = S.ri === ROUNDS.length - 1;
   const rows = T.map((t, i) => ({ i, t, ...teamSummary(i, S.ri) })).sort((a, b) => b.pts - a.pts);
   panel.innerHTML = `
-    <p class="eyebrow">Manche ${S.ri + 1} · ${esc(r.nome)} · risultati</p>
+    <p class="eyebrow">Round ${S.ri + 1} · ${esc(r.nome)} · risultati</p>
     <h1 class="title">Com'è andata?</h1>
     <div class="cards" id="cards" style="--n:${T.length}"></div>
     ${T.length > 1 && !lastRound ? `<table class="board small">
-      <thead><tr><th>#</th><th>CLASSIFICA DOPO ${S.ri + 1} MANCHE</th><th class="num">PERSONE SALVATE</th><th class="num">PUNTI</th></tr></thead>
+      <thead><tr><th>#</th><th>CLASSIFICA DOPO ${S.ri + 1} ROUND</th><th class="num">PERSONE SALVATE</th><th class="num">PUNTI</th></tr></thead>
       <tbody>${rankRows(rows).map(x => `<tr class="${x.rank === 1 ? "first" : ""}" style="${tStyle(x.i)}"><td>${x.rank}</td><td class="tn">${esc(x.t.name)}</td><td class="num">${x.saved} / ${S.ri + 1}</td><td class="num"><span class="cnt" data-to="${x.pts}">${fmt(x.pts)}</span></td></tr>`).join("")}</tbody>
     </table>` : ""}
     <div class="actions">
       <button class="btn ghost" data-act="backToQ">Correggi i voti</button>
-      <div class="right"><button class="btn" data-act="nextRound">${lastRound ? "Classifica finale" : "Manche successiva"}</button></div>
+      <div class="right"><button class="btn" data-act="nextRound">${lastRound ? "Classifica finale" : "Round successivo"}</button></div>
     </div>`;
   const cards = $("cards");
   T.forEach((t, i) => {
@@ -850,10 +856,10 @@ function renderFinal() {
       <p class="eyebrow">Fine partita</p>
       <div class="final-gate">
         <h1 class="title cool">E ora…</h1>
-        <p class="lede">${ROUNDS.length} manche, ${rows.reduce((n, r) => n + r.saved, 0)} persone salvate su ${ROUNDS.length * rows.length}. Chi ha fatto meglio?</p>
+        <p class="lede">${ROUNDS.length} round, ${rows.reduce((n, r) => n + r.saved, 0)} persone salvate su ${ROUNDS.length * rows.length}. Chi ha fatto meglio?</p>
         <button class="btn big go" data-act="showFinal">Mostra classifica finale</button>
       </div>
-      <div class="actions"><button class="btn ghost" data-act="backToLast">Torna all'ultima manche</button></div>`;
+      <div class="actions"><button class="btn ghost" data-act="backToLast">Torna all'ultimo round</button></div>`;
     return;
   }
   const order = [1, 0, 2].filter(k => k < rows.length);           // 2nd, 1st, 3rd from left
@@ -882,7 +888,7 @@ function renderFinal() {
       </table>
     </div>
     <div class="actions">
-      <button class="btn ghost" data-act="backToLast">Torna all'ultima manche</button>
+      <button class="btn ghost" data-act="backToLast">Torna all'ultimo round</button>
       <div class="right"><button class="btn" data-act="toMenu">Menu</button></div>
     </div>`;
   // Reveal from last place to first: each table row appears and counts up;

@@ -5,7 +5,7 @@
 //  Il gioco ha 4 round, uno per truffa, nell'ordine in cui compaiono qui.
 //  Ogni round ha:
 //    nome, intro: titolo e breve descrizione della truffa
-//    mult:        moltiplicatore della manche (uguale per tutte le squadre)
+//    mult:        moltiplicatore del round (uguale per tutte le squadre)
 //    esiti:       cosa succede alla vittima per ogni tipo di salvataggio
 //    vittime:     4 persone da salvare. A ogni partita il gioco ne
 //                 assegna una a caso a ogni squadra.
@@ -23,7 +23,7 @@ window.CYBERQUIZ = {
   title: "Soccorso digitale",
 
   // Fasce di salvataggio, sulla percentuale di risposte esatte della squadra nel round.
-  // Punti del round = percentuale (arrotondata per eccesso) × mult della manche × mult della fascia
+  // Punti del round = percentuale (arrotondata all'intero) × mult del round × mult della fascia
   fasce: [
     { id: "perfetto", min: 90, label: "Salvataggio perfetto",    mult: 2 },
     { id: "efficace", min: 80, label: "Salvataggio efficace",    mult: 1.6 },
