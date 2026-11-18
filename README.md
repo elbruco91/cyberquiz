@@ -1,4 +1,4 @@
-# Cyberquiz · Soccorso digitale
+# Cyberquiz · Grande Quiz Anti-Scam VI
 
 Quiz a squadre per l'aula, in pixel art, sulla lezione di Cybersecurity. In ogni round ogni squadra deve salvare una persona da una truffa. Il formatore inserisce i voti dal computer collegato al proiettore. Tutte le schermate sono pensate per stare in un unico schermo 16:9. I font sono inclusi nella cartella `fonts`, quindi il gioco funziona anche senza connessione.
 

@@ -20,7 +20,7 @@
 
 window.CYBERQUIZ = {
   eyebrow: "Lezioni by LV8 · Cybersecurity",
-  title: "Soccorso digitale",
+  title: "Grande Quiz Anti-Scam VI",
 
   // Fasce di salvataggio, sulla percentuale di risposte esatte della squadra nel round.
   // Punti del round = percentuale (arrotondata all'intero) × mult del round × mult della fascia
