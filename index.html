@@ -151,8 +151,9 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--volt); outl
 .rule { background: var(--slot); border: 3px solid var(--edge); border-top: calc(var(--u) * 0.9) solid var(--gold); padding: calc(var(--u) * 1.9) calc(var(--u) * 2.1); display: flex; flex-direction: column; gap: calc(var(--u) * 1.1); }
 .rule h3 { font-size: calc(var(--u) * 3.2); color: var(--gold); margin: 0; line-height: 1.1; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 400; }
 .rule p { margin: 0; font-size: calc(var(--u) * 2.7); line-height: 1.22; }
-.rlist { margin: 0; padding-left: 1.1em; display: grid; gap: calc(var(--u) * 1); font-size: calc(var(--u) * 2.7); line-height: 1.18; }
+.rlist { margin: 0; padding-left: 1.1em; display: grid; gap: calc(var(--u) * 0.7); font-size: calc(var(--u) * 2.7); line-height: 1.18; }
 .rlist li::marker { color: var(--gold); }
+.emo { font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; white-space: nowrap; }
 .rule .num { font-family: var(--f-display); font-size: calc(var(--u) * 1.6); color: var(--muted); }
 .bands { display: grid; gap: calc(var(--u) * 0.9); }
 .band-row { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 4px 10px; font-size: calc(var(--u) * 2.6); line-height: 1.1; }
@@ -683,25 +684,34 @@ function renderIntro() {
   panel.innerHTML = `
     <p class="eyebrow">Le regole</p>
     <h1 class="title">Salvate più persone che potete</h1>
-    <p class="lede">${ROUNDS.length} round, uno per ogni truffa: ${ROUNDS.map(r => esc(r.nome)).join(" · ")}. In ogni round ogni squadra ha una persona da salvare.</p>
     <div class="rules">
-      <div class="rule"><span class="num">1</span><h3>${ROUNDS.length} Round</h3>
+      <div class="rule"><span class="num">1</span><h3>Come si risponde</h3>
         <ul class="rlist">
-          <li>Ogni round ha ${nQ} domande.</li>
-          <li>Si risponde per alzata di mano.</li>
-          <li>Chi non risponde conta come risposta sbagliata.</li>
-          <li>Una volta alzata la mano non si può tornare indietro: se cambi idea, il voto non vale.</li>
+          <li>Le domande sono vero/falso o a scelta multipla.</li>
+          <li>Quando una domanda viene letta, si vota la risposta che si ritiene giusta per alzata di mano.</li>
+          <li>Le domande vengono lette una volta sola.</li>
+          <li>Non è possibile cambiare opzione.</li>
+          <li>Fare i furbi = penalità.</li>
         </ul></div>
-      <div class="rule"><span class="num">2</span><h3>Punteggi e round</h3>
-        <p>I punti dipendono dalla percentuale di risposte corrette nel team (es. 8 su 10 = 80% = 80 punti).</p>
-        <p>Alcuni round assegnano più punti di altri:</p>
-        <div class="mults">${ROUNDS.map((r, i) => `<span>Round ${i + 1} · ${esc(r.nome)}</span><b>×${fmt(r.mult || 1)}</b>`).join("")}</div></div>
-      <div class="rule"><span class="num">3</span><h3>Salvali tuttx</h3>
-        <p>Salva le persone scammate per ottenere punti bonus. Se la persona viene truffata, i punti del round sono 0.</p>
+      <div class="rule"><span class="num">2</span><h3>Salvali tutti</h3>
+        <ul class="rlist">
+          <li>L'obiettivo di ogni team è salvare una persona vittima di truffa.</li>
+          <li>Una persona viene salvata se le risposte corrette nel round sono almeno il ${FASCE[FASCE.length - 2].min}%.</li>
+          <li>Sotto il ${FASCE[FASCE.length - 2].min}% la persona non è salvata e il punteggio del round è 0.</li>
+        </ul>
         <div class="bands">${FASCE.map((f, i) => `<div class="band-row" style="--bc:${BAND_COL[f.id] || "var(--gold)"}"><b>${esc(f.label.replace(/^Salvataggio /i, ""))}</b><span>${bandTxt(f, i)} · ×${fmt(f.mult)}</span></div>`).join("")}</div></div>
-      <div class="rule"><span class="num">4</span><h3>Vittoria</h3>
-        <p>Vince il team che totalizza più punti.</p>
-        <p class="note">Le percentuali si arrotondano all'intero: da ,5 in su per eccesso. Massimo ${fmt(maxScore())} punti.</p></div>
+      <div class="rule"><span class="num">3</span><h3>${ROUNDS.length} round</h3>
+        <ul class="rlist">
+          <li>Si svolgono in tutto ${ROUNDS.length} round, ognuno dedicato a una truffa diversa.</li>
+          <li>Alcuni round sono "al buio", altri si svolgono dopo una spiegazione.</li>
+          <li>Ogni round ha un peso diverso sul risultato finale.</li>
+        </ul>
+        <div class="mults">${ROUNDS.map((r, i) => `<span>Round ${i + 1} · ${esc(r.nome)}</span><b>×${fmt(r.mult || 1)}</b>`).join("")}</div></div>
+      <div class="rule"><span class="num">4</span><h3>Come si vince</h3>
+        <ul class="rlist">
+          <li>Al termine di ogni round viene comunicato il punteggio.</li>
+          <li>Vince il team che ha totalizzato più punti al termine del ${["primo", "secondo", "terzo", "quarto", "quinto", "sesto"][ROUNDS.length - 1] || "ultimo"} round. <span class="emo">💰💰💰</span></li>
+        </ul></div>
     </div>
     <div class="actions"><button class="btn ghost" data-act="toMenuPause">Menu</button><div class="right"><button class="btn" data-act="toRound">Primo round</button></div></div>`;
 }
