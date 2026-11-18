@@ -50,7 +50,7 @@ Round, persone da salvare, domande e moltiplicatori sono tutti in `content.js`. 
 
 - `mult`: moltiplicatore del round.
 - `vittime`: quattro persone, con `nome` e `situazione`. Il ritratto in pixel si genera dal nome.
-- `domande`: cinque per round. `q` è il testo, `options` le risposte, da 2 a 4 (A, B, C, D; per un vero/falso `["Vero", "Falso"]`), `correct` la posizione della risposta giusta (0 = A, 1 = B, 2 = C, 3 = D).
+- `domande`: tre per round. `q` è il testo, `options` le risposte, da 2 a 4 (A, B, C, D; per un vero/falso `["Vero", "Falso"]`), `correct` la posizione della risposta giusta (0 = A, 1 = B, 2 = C, 3 = D).
 - `esiti`: il testo che si legge per ogni tipo di salvataggio.
 
 L'ordine dei round è quello in cui compaiono nel file.

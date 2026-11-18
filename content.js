@@ -55,18 +55,12 @@ window.CYBERQUIZ = {
         { q: "Un fuffa guru è un sedicente esperto che vende corsi online promettendo guadagni lenti, costanti e sicuri.",
           options: ["Vero", "Falso"],
           correct: 1 },
-        { q: "I veri guadagni di un fuffa guru arrivano principalmente dai metodi che insegna nei suoi corsi.",
-          options: ["Vero", "Falso"],
-          correct: 1 },
         { q: "Quale di queste cose tipiche millantate da un fuffa guru è sicuramente FALSA?",
           options: ["Vive a Dubai", "Guida macchine sportive", "Guadagna attraverso i metodi che insegna nei suoi corsi", "Ha centinaia di seguaci che lo finanziano"],
           correct: 2 },
         { q: "Quale di queste cose starebbe pensando una persona circuita dai fuffa guru, se leggesse queste domande?",
-          options: ["Queste sono semplificazioni", "Mimmo Brambilla che conosco io non è un fuffa guru", "Io conosco un metodo che funziona", "Tutte le precedenti"],
-          correct: 3 },
-        { q: "Lo schema piramidale è un sistema di investimento in cui, oltre a vendere beni di valore, si guadagna anche dal reclutamento di nuove persone nel sistema.",
-          options: ["Vero", "Falso"],
-          correct: 1 }
+          options: ["Queste sono semplificazioni", "Tizio Caio che conosco io non è un fuffa guru", "Io conosco un metodo che funziona", "Tutte le precedenti"],
+          correct: 3 }
       ]
     },
     // ------------------------------------------------------------- 2
@@ -88,21 +82,15 @@ window.CYBERQUIZ = {
         { nome: "D. Istratto", situazione: "Trova un link che promette skin gratis per il suo videogioco preferito, basta fare login." }
       ],
       domande: [
-        { q: "Quale di queste non è una vera truffa?",
-          options: ["Phishing", "Smishing", "Vishing", "Sono tutte truffe"],
-          correct: 3 },
         { q: "Quale di queste NON è una leva emotiva utilizzata dal phishing per truffare le persone?",
           options: ["Nostalgia", "Fiducia", "Paura", "Urgenza"],
           correct: 0 },
-        { q: "L'AI sta rendendo sempre più facile scoprire queste truffe.",
+        { q: "L'AI sta rendendo sempre più facile scoprire le truffe.",
           options: ["Vero", "Falso"],
           correct: 1 },
         { q: "Come fa un truffatore a sapere che possiedi un account Netflix?",
           options: ["Perché non hai il controllo dei tuoi dati", "Perché hai accettato qualche cookie strano", "Sparano a caso", "Ti osservano attraverso la fotocamera del telefono o del pc"],
-          correct: 2 },
-        { q: "Ti rendi conto troppo tardi di aver fornito i dati della tua carta a uno scammer. Qual è l'autorità da contattare?",
-          options: ["La polizia stradale", "La polizia postale", "La polizia locale", "L'esercito"],
-          correct: 1 }
+          correct: 2 }
       ]
     },
     // ------------------------------------------------------------- 3
@@ -124,18 +112,12 @@ window.CYBERQUIZ = {
         { nome: "W. Ifisempre", situazione: "Trova nello spam un'email generica che chiede 500 € in bitcoin per non diffondere un video." }
       ],
       domande: [
-        { q: "Un esempio di sextortion: una creator di OnlyFans si fa donare migliaia di euro da un utente ossessionato da lei, senza però dargli nulla in cambio.",
-          options: ["Vero", "Falso"],
-          correct: 1 },
         { q: "Qualcuno ti manda un messaggio dicendo che possiede foto intime di te e che, se non gliene mandi altre, le diffonderà a tutti i tuoi amici e ai tuoi genitori. Questo è un caso di sextortion.",
           options: ["Vero", "Falso"],
           correct: 0 },
         { q: "La sextortion è un fenomeno che riguarda soprattutto…",
           options: ["Uomini sopra i 50 anni", "Donne fra i 20 e i 30 anni", "Uomini sotto i 20 anni", "Donne sopra i 60 anni"],
           correct: 2 },
-        { q: "È impossibile essere vittima di sextortion se mantieni le tue foto intime sul tuo pc.",
-          options: ["Vero", "Falso"],
-          correct: 1 },
         { q: "Una di queste azioni NON aiuta a tutelarsi dal rischio di subire sextortion. Quale?",
           options: ["Evitare di mandare materiale intimo a chi non si conosce di persona", "Limitarsi a condividere certe immagini solo con il proprio partner", "Mettere il profilo privato su IG", "Non mantenere salvati certi materiali sul proprio pc"],
           correct: 1 }
@@ -168,12 +150,6 @@ window.CYBERQUIZ = {
           correct: 2 },
         { q: "Aggiornare telefono e pc serve a diminuire la possibilità di beccarsi dei virus.",
           options: ["Vero", "Falso"],
-          correct: 0 },
-        { q: "Un modo comune di prendere i virus è scaricare programmi da posti strani.",
-          options: ["Vero", "Falso"],
-          correct: 0 },
-        { q: "L'antivirus serve veramente a qualcosa nel 2026?",
-          options: ["Sì", "No"],
           correct: 0 }
       ]
     }
