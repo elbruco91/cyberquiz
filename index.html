@@ -119,10 +119,13 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--volt); outl
 /* ---------- Menu ---------- */
 .menu { display: grid; place-items: center; align-content: center; gap: calc(var(--u) * 3.2); text-align: center; flex: 1; }
 .menu .logo { font-family: var(--f-display); font-size: calc(var(--u) * 7.2); color: var(--blood); text-shadow: 7px 7px 0 var(--black); margin: 0; line-height: 1.15; letter-spacing: 0; }
-.menu .logo { display: grid; justify-items: center; gap: calc(var(--u) * 1.6); }
-.logo-top { font-size: calc(var(--u) * 3.4); color: var(--volt); letter-spacing: 0.35em; text-shadow: 4px 4px 0 var(--black); padding-left: 0.35em; }
-.logo-row { display: flex; align-items: center; gap: calc(var(--u) * 2.4); }
-.logo-main { font-size: calc(var(--u) * 8); color: var(--blood); text-shadow: 7px 7px 0 var(--black); }
+.menu .logo { display: flex; align-items: center; justify-content: center; gap: calc(var(--u) * 3); text-shadow: none; }
+.logo-stack { display: grid; justify-items: start; gap: calc(var(--u) * 1.2); }
+.logo-stack span {
+  font-size: calc(var(--u) * 6.4); line-height: 1; color: var(--black);
+  text-shadow: 3px 0 0 #fff, -3px 0 0 #fff, 0 3px 0 #fff, 0 -3px 0 #fff, 3px 3px 0 #fff, -3px -3px 0 #fff, 3px -3px 0 #fff, -3px 3px 0 #fff,
+               7px 7px 0 var(--black);
+}
 .logo-num {
   font-size: calc(var(--u) * 7); color: #ffffff; background: #ff3d9a; padding: calc(var(--u) * 1.4) calc(var(--u) * 1.6) calc(var(--u) * 1);
   border: 4px solid var(--black); box-shadow: inset 0 calc(var(--u) * -1.4) 0 #c41f72, 0 0 0 4px #ff8cc6, 0 0 0 8px var(--black), 10px 10px 0 4px var(--black);
@@ -586,8 +589,7 @@ document.title = C.title || "Cyberquiz";
 function logoHtml() {
   const words = (C.title || "Cyberquiz").toUpperCase().split(/\s+/);
   const num = words.length > 1 && /^[IVXLC]+$/.test(words[words.length - 1]) ? words.pop() : "";
-  const top = words.length > 2 ? words.splice(0, 2).join(" ") : "";
-  return `<h1 class="logo">${top ? `<span class="logo-top">${esc(top)}</span>` : ""}<span class="logo-row"><span class="logo-main">${esc(words.join(" "))}</span>${num ? `<span class="logo-num">${esc(num)}</span>` : ""}</span></h1>`;
+  return `<h1 class="logo"><span class="logo-stack">${words.map(w => `<span>${esc(w)}</span>`).join("")}</span>${num ? `<span class="logo-num">${esc(num)}</span>` : ""}</h1>`;
 }
 $("gameSub").textContent = C.eyebrow || "";
 
